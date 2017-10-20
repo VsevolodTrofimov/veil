@@ -36,5 +36,6 @@ while True:
         disc = hstack([disc, clf.predict(commentsmat).tolist().count(1)/len(comments)])
         print(i)
         d = open('pred_res\\'+i, mode='w')
+        print(clfdisc.predict(disc))
         d.write(str(clfdisc.predict(disc).tolist()[0]))
-        remove('to_pred'+'\\'+i)
+        remove('pred_set'+'\\'+i)
