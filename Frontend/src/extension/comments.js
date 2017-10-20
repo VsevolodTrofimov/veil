@@ -16,7 +16,7 @@ export const parseReplyLink = ($replyLink, postId = -1) => {
 
     if($originalComment)
         return parseComment($originalComment, postId)
-    else return {}
+    else return {commentId: -1}
 }
 
 export const parseComment = ($comment, postId = -1) => {
