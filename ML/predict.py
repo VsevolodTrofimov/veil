@@ -9,6 +9,7 @@ import string
 import nltk
 import time
 from scipy.sparse import hstack
+from os import system
 
 stopwords=[]
 
@@ -16,8 +17,9 @@ clfdisc = joblib.load('SGD_pars')
 clf = joblib.load('NB_pars')
 vectorizer = joblib.load('TFIDF_pars')
 
+t = 0
+
 while True:
-    time.sleep(1)
     pred=[]
     files = listdir('pred_set')
     for i in files:
@@ -37,5 +39,12 @@ while True:
         print(i)
         d = open('pred_res\\'+i, mode='w')
         print(clfdisc.predict(disc))
-        d.write(str(clfdisc.predict(disc).tolist()[0]))
+        d.write(str(clfdisc.predict(disc).tolist()))
+        d.close()
         remove('pred_set'+'\\'+i)
+    t+=1
+    time.sleep(1)
+    if t==3600*24*30:
+        system('chdir ' + curdir)
+        system('python train.py')
+        t=0
