@@ -24,11 +24,11 @@ export const parseComment = ($comment, postId = -1) => {
     const authorId = $comment.querySelector('a.author').getAttribute('data-from-id')
    
     const replyLinks = Array.from($comment.querySelectorAll('a.reply_to')) 
-    const replies = replyLinks.map($replyLink => parseReplyLink($replyLink).commentId)
+    const mentions = replyLinks.map($replyLink => parseReplyLink($replyLink).commentId)
 
     const text = $comment.querySelector('.reply_text').textContent
 
-    return {commentId, authorId, postId, text, replies}
+    return {commentId, authorId, postId, text, mentions}
 }
 
 export default parseComment

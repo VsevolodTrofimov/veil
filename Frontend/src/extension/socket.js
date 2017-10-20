@@ -6,7 +6,7 @@
         -> postId
         -> authorId
         -> text
-        -> replies = [commentId]
+        -> mentions = [commentId]
     type CONNECT
         -> userLink
         
