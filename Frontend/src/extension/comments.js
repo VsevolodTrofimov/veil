@@ -1,8 +1,8 @@
-import { WATCH_INTERVAL } from './config'
+import * as spy from './spy'
 
 export const $getCommentsByPostId = postId => {
-    const $commentBlock = document.querySelector(`#replies${postId}`)
-    return Array.from($commentBlock.children)
+    const $comments = document.querySelectorAll(`#replies${postId} > .reply`)
+    return Array.from($comments)
 }
 
 export const parseReplyLink = ($replyLink, postId = -1) => {
@@ -37,7 +37,7 @@ export default parseComment
 // Watchers
 const watchedPosts = []
 
-const nextWatcherId = 0
+let nextWatcherId = 0
 
 export const watchPost = (postId, cb) => {
     const postToBeWatched = {
@@ -61,18 +61,20 @@ export const unwatchPost = (targetWatcherId) => {
     return false
 }
 
-setInterval(() => {
+spy.add(() => {
     watchedPosts.forEach(watcher => {
         try {
             const $comments = $getCommentsByPostId(watcher.postId)
             $comments.forEach($comment => {
-                if(watcher.oldComments.indexOf($comment) === -1) {
-                    const comment = parseComment($comment)
-                    cb(comment)
+                const comment = parseComment($comment, watcher.postId)
+                if(watcher.oldComments.indexOf(comment.commentId) === -1) {
+                    watcher.oldComments.push(comment.commentId)
+                    watcher.cb(comment)
                 }
             })
         } catch (err) {
+            console.error(err)
             unwatchPost
         }
     })
-}, WATCH_INTERVAL)
+})

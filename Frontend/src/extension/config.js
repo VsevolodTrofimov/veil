@@ -1,1 +1,0 @@
-export const WATCH_INTERVAL = 1000

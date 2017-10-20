@@ -1,4 +1,4 @@
-import { WATCH_INTERVAL } from './config'
+import * as spy from './spy'
 
 import { $getCommentsByPostId, parseReplyLink, parseComment} from './comments'
 
@@ -6,18 +6,17 @@ export const veil = (postId, userIds) => {
     const $postComments = $getCommentsByPostId(postId)
     
     $postComments.forEach($comment => {
-        console.log('preVeil', $comment)
         if($comment !== null) {
             const parsedComment = parseComment($comment, postId)
             const commentAuthor = parsedComment.authorId
             if(userIds.indexOf(commentAuthor) !== -1) {
-                console.log('removed comment ', parsedComment.commentId)
+                console.log('removed comment', parsedComment.commentId)
                 $comment.remove()
             }
         }
     })
 
-    console.log('veilComplete')
+    // console.log('veilComplete')
 }
 
 export default veil
@@ -26,7 +25,7 @@ export default veil
 // Watchers
 const watchedPosts = []
 
-const nextWatcherId = 0
+let nextWatcherId = 0
 
 export const watchPost = (postId, userIds) => {
     const postToBeWatched = {
@@ -49,12 +48,13 @@ export const unwatchPost = (targetWatcherId) => {
     return false
 }
 
-setInterval(() => {
+spy.add(() => {
     watchedPosts.forEach(watcher => {
         try {
-            veil(post.postId, post.userIds)
+            veil(watcher.postId, watcher.userIds)
         } catch (err) {
+            console.error(err)
             unwatchPost(watcher.watcherId)
         }
     })
-}, WATCH_INTERVAL)
+})
