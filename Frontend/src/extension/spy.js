@@ -37,14 +37,14 @@ const shouldSpy = $el => {
 }
 
 let vkshow = window.show
-window.show = $el => {
-    shouldSpy($el)
-    return vkshow($el)
+window.show = function() {
+    shouldSpy(...arguments)
+    vkshow(...arguments)
 }
 
 wall.vkshowReplies = wall.showReplies
 
 wall.showReplies = function() {
     spy()
-    return wall.vkshowReplies
+    return wall.vkshowReplies(...arguments)
 }

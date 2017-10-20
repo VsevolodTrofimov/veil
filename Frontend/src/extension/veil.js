@@ -4,7 +4,15 @@ import { $getCommentsByPostId, parseReplyLink, parseComment} from './comments'
 
 export const veil = (postId, userIds) => {
     const $postComments = $getCommentsByPostId(postId)
-    
+    const $more = document.querySelector(`[data-post-id="${postId}"] .wr_header`)    
+    if($more) {
+        console.log('set listener')
+        $more.addEventListener('click', () => {
+            console.log('reacted')
+            setTimeout(() => veil(postId, userIds), 200)
+        })
+    }
+
     $postComments.forEach($comment => {
         if($comment !== null) {
             const parsedComment = parseComment($comment, postId)
@@ -33,6 +41,8 @@ export const watchPost = (postId, userIds) => {
         userIds,
         watcherId: nextWatcherId++
     }
+
+    veil(postId, userIds)
 
     watchedPosts.push(postToBeWatched)
 
