@@ -16,6 +16,11 @@ import json
 from os import path, getcwd, remove, listdir
 import re
 import jsonpickle
+from OpenSSL import SSL
+
+context = SSL.Context(SSL.SSLv23_METHOD)
+context.use_privatekey_file('key.pem')
+context.use_certificate_file('cert.pem')
 
 
 app = Flask(__name__)
@@ -152,4 +157,4 @@ def read_res_and_write_to_db():
 
 if __name__ == '__main__':
     # socket.run(app, port=5000, keyfile='key.pem', certfile='cert.pem')
-    socket.run(app, port=5000)
+    socket.run(app, port=5000, ssl_context=context)
