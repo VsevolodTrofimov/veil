@@ -11,13 +11,15 @@ import time
 from scipy.sparse import hstack
 from os import system
 
-stopwords=[]
+s = open('stopwords.txt', 'r', encoding='utf-8')
+stopwords = list(map(lambda x: x[:-1], s.readlines()))
 
 clfdisc = joblib.load('SGD_pars')
 clf = joblib.load('NB_pars')
 vectorizer = joblib.load('TFIDF_pars')
 
 t = 0
+stemmer = nltk.stem.snowball.RussianStemmer()
 
 while True:
     pred=[]
@@ -29,6 +31,7 @@ while True:
         for l in range(0, len(a), 2):
             j=nltk.word_tokenize(a[l])
             j = [k for k in j if not k in string.punctuation]
+            j = [stemmer.stem(k) for k in j]
             j = [k for k in j if not k in stopwords]
             comments.append(' '.join(j).lower())
         commentsmat = vectorizer.transform(comments)
