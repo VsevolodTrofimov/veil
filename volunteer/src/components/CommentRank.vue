@@ -4,7 +4,7 @@
         <md-button class="md-raised md-warn"
                    v-on:click="makeVerdict('offensive')"> Оскорбительный </md-button>
     
-        <Comment v-bind:text=commentText />
+        <Comment v-bind:text="commentText" />
 
         <md-button class="md-raised md-primary"
                    v-on:click="makeVerdict('ok')"> Ничего плохого </md-button>
