@@ -36,7 +36,7 @@ def home():
     return ''
 
 
-@socket.on('connected')
+@socket.on('connect')
 def get_userid_and_send_all_veils(data):
     userId = data['userId']
 
@@ -151,4 +151,4 @@ def read_res_and_write_to_db():
         db.session.commit()
 
 if __name__ == '__main__':
-    socket.run(app, port=5000)
+    socket.run(app, port=5000, keyfile='key.pem', certfile='cert.pem')
