@@ -40,16 +40,19 @@ const watchedPosts = []
 let nextWatcherId = 0
 
 export const watchPost = (postId, cb) => {
-    const postToBeWatched = {
+    const newWatcher = {
         postId,
         cb,
         oldComments: [],
         watcherId: nextWatcherId++
     }
 
-    watchedPosts.push(postToBeWatched)
+    if(watchedPosts.indexOf(postId) === -1) {
+        watchedPosts.push(newWatcher)
+        return newWatcher
+    }
 
-    return postToBeWatched
+    return false
 }
 export const unwatchPost = (targetWatcherId) => {
     for(let i=0; i<watchedPosts.length; i++) {
@@ -63,6 +66,7 @@ export const unwatchPost = (targetWatcherId) => {
 
 spy.add(() => {
     watchedPosts.forEach(watcher => {
+        console.log(watchedPosts)
         try {
             const $comments = $getCommentsByPostId(watcher.postId)
             $comments.forEach($comment => {

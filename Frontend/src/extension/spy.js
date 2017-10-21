@@ -27,7 +27,7 @@ const spy = () => {
 }
 
 const shouldSpy = $el => {
-    console.log('to spy or not to spy')
+    // console.log('to spy or not to spy')
     if($el && $el.getAttribute) {
         const id = $el.getAttribute('id')
         if(id && id.substring(0, 12) === 'replies_side') {
