@@ -27,7 +27,7 @@ const spy = () => {
 }
 
 const shouldSpy = $el => {
-    console.log('to spy or not to spy')
+    // console.log('to spy or not to spy')
     if($el && $el.getAttribute) {
         const id = $el.getAttribute('id')
         if(id && id.substring(0, 12) === 'replies_side') {
@@ -43,8 +43,20 @@ window.show = function() {
 }
 
 wall.vkshowReplies = wall.showReplies
-
 wall.showReplies = function() {
     spy()
     return wall.vkshowReplies(...arguments)
 }
+
+
+let WkViewSpySet = setInterval(() => {
+    if(window.WkView) {
+        clearInterval(WkViewSpySet)
+        console.log('set WkView spy')
+        WkView.vkarrows = WkView.updateArrows
+        WkView.updateArrows = function() {
+            spy()
+            return WkView.vkarrows(...arguments)
+        }
+    }
+}, 100)
