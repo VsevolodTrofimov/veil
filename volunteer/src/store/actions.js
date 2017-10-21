@@ -36,7 +36,7 @@ export const getDiscussions = ({commit}) => {
         authorId: '5',
         text: 'Bad text'
     }]}, 
-    ]), 1000)
+    ]), 5000)
 }
 
 export const sendToServer = ({state, commit, dispatch}) => {

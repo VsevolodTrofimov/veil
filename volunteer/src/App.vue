@@ -10,7 +10,10 @@
                    class="content">
             <CommentRank v-if="stage==='comment'" />
             <DiscussionRank v-else-if="stage==='discussion'"/>
-            <md-spinner :md-indeterminate="true" v-else />
+            <md-layout v-else md-column md-align='center' md-vertical-align='center'>
+                <md-spinner :md-indeterminate="true" />
+                <h4> Спасибо, что помогаете делать интернет лучше! </h4>
+            </md-layout>
         </md-layout>
     </div>
 </template>
