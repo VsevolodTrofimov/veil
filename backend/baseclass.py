@@ -12,20 +12,21 @@ def bfs(ments, diction, root):
 class Base(object):
     comments = dict()
     root_id = "-1"  # id комментария подзащитного
-    prot_id = "0"  # id подзащитного
+    # prot_id = "0"  # id подзащитного
     chain = list() # список комментов из релевантной ветки, формата (id коммента, коммент)
     def __init__(self, root_id, comments):
         self.root_id = root_id
         for i in comments:
             print(i)
-            self.comments[i[0]] = [i[1], i[2], i[3]] # i[0] - id коммента, i[1] - список id меншнов, i[2] - коммент, i[3] - id комментатора
+            self.comments[str(i[0])] = [str(i[1]), str(i[2]), str(
+                i[3])]  # i[0] - id коммента, i[1] - список id меншнов, i[2] - коммент, i[3] - id комментатора
             if i[0]!=root_id:
                 self.addnew(i[1], i[2], i[0], i[3])
             else:
                 self.chain.append(tuple([root_id,
                                          self.comments[root_id][1],
                                          self.comments[root_id][2]])) # root_id - id коммента подзащитного, comments[root_id] - коммент подзащитного
-        self.prot_id = self.comments[root_id][2]
+            #        self.prot_id = self.comments[root_id][2]
 
 
     def addnew(self, ments, comment, com_id, user_id):

@@ -7,31 +7,31 @@
 #       userId
 #
 
-from flask import Flask, request
-from flask_socketio import SocketIO, send, emit
+from flask import Flask, request, jsonify
+# from flask_socketio import SocketIO, send, emit
+import socketio
+import eventlet
+import eventlet.wsgi
+from eventlet.green.OpenSSL import SSL
 from models import db, Discussion, Veils, Comment
+import ssl
 from baseclass import Base
 import urllib.request
 import json
 from os import path, getcwd, remove, listdir
 import re
 import jsonpickle
-from OpenSSL import SSL
-
-context = SSL.Context(SSL.SSLv23_METHOD)
-context.use_privatekey_file('key.pem')
-context.use_certificate_file('cert.pem')
-
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://test_user:123456@localhost/veil'
+
 db.init_app(app)
 with app.app_context():
     db.create_all()
     db.session.commit()
 
-socket = SocketIO(app)
+sio = socketio.Server()
 
 clients = {}
 
@@ -41,45 +41,50 @@ def home():
     return ''
 
 
-@socket.on('connect')
-def get_userid_and_send_all_veils(data):
-    userId = data['userId']
+@sio.on('connect')
+def connect(sid, environ):
+    print("CONNECTED: ", sid)
+    return 'OK'
 
+
+@sio.on('disconnect')
+def disconnect(sid, environ):
+    print('DISCONNECTED: %s' % clients[sid])
+
+
+@sio.on('connected')
+def get_userid_and_send_all_veils(sid, data):
+    userId = data['userId']
     response_raw = urllib.request.urlopen(
         "https://api.vk.com/method/utils.resolveScreenName?screen_name=" + userId).read().decode("utf-8")
     response = json.loads(response_raw)
     userScreenName = str(response['response']['object_id'])
 
-    print("%s connected. Sending veils" % userScreenName)
-    clients[str(request.sid)] = userScreenName
+    clients[str(sid)] = userScreenName
+    print(clients)
+
+    print("%s connected" % userScreenName)
 
     send_veil()
 
-
-@socket.on('disconnect')
-def disconnect():
-    print('User id%s disconnected' % clients[request.sid])
-
-
-@socket.on('veil')
 def send_veil():
-    for d in Discussion.query.filter(Discussion.veiled == True).all():
+    for d in Discussion.query.filter(Discussion.veiled == False).all():
         data = {}
-        data['type'] = 'VEIL'
-        data['data']['post_id'] = d.postID
+        data['data'] = {}
+        data['data']['post_id'] = d.postId
         data['data']['user_ids'] = [u for u in d.users if u != clients[request.sid]]
 
-        emit('response', data, json=True, room=request.sid)
+        sio.emit('veil_send', data)
 
 
-@socket.on('comment')
-def receive_comment(data):
-    our_guy = clients[str(request.sid)]
+@sio.on('comment')
+def receive_comment(sid, data):
+    our_guy = clients[str(sid)]
 
     comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'], data['mentions'])
     if comment.postId == "-1":
         print("Discussion - bad id.")
-        send('Error. Bad id.')
+        sio.emit('comment_reply', 'Error. Bad id.')
 
 
     response = Discussion.query.filter_by(postId=comment.postId).all()
@@ -109,16 +114,39 @@ def receive_comment(data):
     send_veil()
 
 
-@socket.on('send_discussions')
-def send_discussions():
+@app.route('/getDiscussions/<string:userId>')
+def send_discussions(userId):
     result = []
-    disc = Discussion.query.filter(Discussion.rated == True).limit(5).all()
-
+    disc = Discussion.query.filter(Discussion.users.any(str(userId))).filter(Discussion.rated == False).limit(5).all()
     for d in disc:
-        result.append(jsonpickle.decode(disc.discussion))
+        dic = {}
+        dic['postId'] = d.postId
+        dic['comments'] = d.discussion
+        result.append(dic)
+    print(result)
 
-    emit('send_discussions', result, json=True, room=request.sid)
+    return (jsonify(result))
 
+
+@app.route('/postDiscussion', methods=['POST'])
+def receive_discussions_and_export_to_ml():
+    data = request.form['data']
+    dat = json.loads(data)
+
+    exp_path = path.abspath(path.join(getcwd(), "../ML/train_set"))
+
+    root_id = dat['comments'][0][0]
+    discussion_verdict = dat['offensive']
+
+    f = open(path.join(exp_path, "id_%s_%s_%s.txt" % (dat['postId'], root_id, discussion_verdict)), 'w')
+    s = ""
+    for c in dat['comments']:
+        com_id = c[0]
+        text = c[1]
+        verdict = c[2]
+        s += text + verdict + '\r\n' + com_id + "\r\n"
+        f.write(s)
+    f.close()
 
 
 def export_to_ml():
@@ -157,4 +185,16 @@ def read_res_and_write_to_db():
 
 if __name__ == '__main__':
     # socket.run(app, port=5000, keyfile='key.pem', certfile='cert.pem')
-    socket.run(app, port=5000, ssl_context=context)
+    #   app.run(app, port=5000)
+    app = socketio.Middleware(sio, app)
+
+    """
+    eventlet.wsgi.server(eventlet.wrap_ssl(eventlet.listen(('', 5000)),
+                                           certfile='cert.pem',
+                                           keyfile='key.pem',
+                                           server_side=True,
+                                           ssl_version=ssl.PROTOCOL_SSLv23),
+                         app)
+    """
+
+    eventlet.wsgi.server(eventlet.listen(('', 5000)), app)
