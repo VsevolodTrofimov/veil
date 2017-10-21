@@ -1,8 +1,8 @@
 <template>
-    <md-card class="card">
+    <div class="card">
         <div v-if="user" class="user"> {{user}} </div>
         <div class="content"> {{text}} </div>
-    </md-card>
+    </div>
 </template>
 
 <script>
@@ -16,7 +16,6 @@
     .user {
         font-size: 24px;
         font-weight: bold;
-        border-right: 1px solid grey;
         display: flex;
         align-items: center;
         justify-content: center;

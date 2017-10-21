@@ -12,6 +12,7 @@ const store = new Vuex.Store({
         /**
          * Array of {done: {bool}, comments: {String[]})
          */
+        stage: 'comment',
         discussions: [],
         longestDiscsussion: 0,
         allDone: true,

@@ -22,6 +22,8 @@ export const next = state => {
         if(state.cursor.discussion === state.discussions.length - 1
            && state.cursor.idx === state.longestDiscsussion - 1) {
             state.allDone = true
+            state.stage = 'desc'
+            state.cursor.discussion = 0
         } else if(state.cursor.discussion === state.discussions.length - 1) {
             state.cursor.discussion = 0
             state.cursor.idx++
