@@ -1,31 +1,13 @@
 // import game
 
-var gameMap = {
-    'clickbait': {
-        text: [],
-        wall: 'Достали тролли в комментариях?',
-        actions: [{
-            text: 'Ага!',
-            goto: 'resist'
-        }, {
-            text: 'Игнорю их и не парюсь',
-            goto: 'im good'
-        }]
-    },
-    'im good': {
-        text: ['Так держать! Но не забывай помогать тем, кто трепетнее к этому отностится'],
-        actions: [{
-            text: 'Игнорю их и не парюсь',
-            goto: 'im good'
-        }]
-    }
-}
+import gameMap from './gameMap'
+import PerfectScrollbar from 'perfect-scrollbar'
 
 const $makeMessageBox = (text, from='bot') => {
     const $message = document.createElement('div')
     $message.textContent = text
     $message.style.padding = '15px'
-    $message.style.marginBottom = '20px'
+    $message.style.marginBottom = '15px'
     $message.style.border = '1px solid #eee'
 
     if(from === 'player') {
@@ -42,6 +24,7 @@ const $makeAction = (context, action) => {
     const $btn = document.createElement('button')
     $btn.classList.add('flat_button')
     $btn.style.marginRight = '15px'
+    $btn.style.marginBottom = '15px'
     $btn.textContent = action.text
 
     $btn.addEventListener('click', () => transition(context, action))
@@ -58,14 +41,14 @@ const renderActions = (context, actions) => {
 
 const renderStage = (context, stage) => {
     context.$wall.innerHTML = ''
-    context.$wall.style.flex = '0'
+    context.$wall.style.display = 'none'
 
     context.map[stage].text.forEach(text => {
         context.$chatbox.appendChild($makeMessageBox(text))
     })
     
     if(context.map[stage].wall) {
-        context.$wall.style.flex = '1'
+        context.$wall.style.display = 'block'
         context.$wall.innerHTML = context.map[stage].wall
     }
 
@@ -91,37 +74,15 @@ const $makeGame = () => {
     const $game = document.createElement('div')
     $game.innerHTML = `<div style="
                         width: 100%;
-                        height: 400px;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: flex-end;
-                        border-radius: 4px;"
-                      >
+                      ">
                         <div class='wall' style="padding: 15px; flex: 1; font-size: 48px; font-weight: 900; line-height: 1.2;"> </div>
-                        <div class='ui_scroll_container ui_scroll_default_theme ui_scroll_hidden' >
-                            <div class='ui_scroll_overflow'>
-                                <div class='ui_scroll_outer'>
-                                    <div class='ui_scroll_inner tt_noappend'>
-                                        <div class='chat ui_scroll_content '> </div>
-                                    </div>
-                                </div>
-                                <div class="ui_scroll_resize_sensor">
-                                    <div class="ui_scroll_resize_sensor ui_scroll_resize_expand">
-                                        <div style="width: 326px; height: 792px;"></div>
-                                    </div>
-                                    <div class="ui_scroll_resize_sensor ui_scroll_resize_shrink">
-                                        <div></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="ui_scroll_bar_container">
-                                <div class="ui_scroll_bar_outer">
-                                    <div class="ui_scroll_bar_inner" style="height: 120.403px; transform: translateY(0px);">
-                                    </div>
-                                </div>
+                        <div class='chat-wrap' style='height: 400px; overflow: auto; position: relative; padding: 15px 15px 0 15px;'> 
+                            <div class='chat' style="display:flex; flex-direction: column; justify-content: flex-end;"> </div>
+                        </div>
+                        <div class='submit_post' style="display:block;">
+                            <div class='actions' style="display:flex; felx-direction: row; flex-wrap: wrap; margin-bottom: -15px;">
                             </div>
                         </div>
-                        <div class='actions submit_post' style="display:flex; felx-direction: row; flex-wrap: wrap;"> </div>
                       </div>`
 
     return $game
@@ -140,7 +101,7 @@ const $fakePost = () => {
     return $feedRow
 }
 
-const injectGame = () => {
+const injectGame = function() {
     const $wall = document.getElementById('feed_rows')
     const $post = $fakePost()
     const $game = $makeGame()
@@ -148,10 +109,130 @@ const injectGame = () => {
     $post.querySelector('.post').appendChild($game)
 
     const context = makeContext(gameMap, $game)
-
+    
+    console.log('setting scroll', context)
+    const scroll = new PerfectScrollbar(context.$chatbox)
+    console.log(scroll)
     renderStage(context, 'clickbait')
-
+    
     const $postInserted = $wall.insertBefore($post, $wall.children[8])
 }
+const scrollbarcss = `
+/*
+ * Container style
+ */
+.ps {
+  overflow: hidden !important;
+  overflow-anchor: none;
+  -ms-overflow-style: none;
+  touch-action: auto;
+  -ms-touch-action: auto;
+}
+
+/*
+ * Scrollbar rail styles
+ */
+.ps__rail-x {
+  display: none;
+  opacity: 0;
+  transition: background-color .2s linear, opacity .2s linear;
+  -webkit-transition: background-color .2s linear, opacity .2s linear;
+  height: 15px;
+  /* there must be 'bottom' or 'top' for ps__rail-x */
+  bottom: 0px;
+  /* please don't change 'position' */
+  position: absolute;
+}
+
+.ps__rail-y {
+  display: none;
+  opacity: 0;
+  transition: background-color .2s linear, opacity .2s linear;
+  -webkit-transition: background-color .2s linear, opacity .2s linear;
+  width: 15px;
+  /* there must be 'right' or 'left' for ps__rail-y */
+  right: 0;
+  /* please don't change 'position' */
+  position: absolute;
+}
+
+.ps--active-x > .ps__rail-x,
+.ps--active-y > .ps__rail-y {
+  display: block;
+  background-color: transparent;
+}
+
+.ps:hover > .ps__rail-x,
+.ps:hover > .ps__rail-y,
+.ps--focus > .ps__rail-x,
+.ps--focus > .ps__rail-y,
+.ps--scrolling-x > .ps__rail-x,
+.ps--scrolling-y > .ps__rail-y {
+  opacity: 0.6;
+}
+
+.ps__rail-x:hover,
+.ps__rail-y:hover,
+.ps__rail-x:focus,
+.ps__rail-y:focus {
+  background-color: #eee;
+  opacity: 0.9;
+}
+
+/*
+ * Scrollbar thumb styles
+ */
+.ps__thumb-x {
+  background-color: #aaa;
+  border-radius: 6px;
+  transition: background-color .2s linear, height .2s ease-in-out;
+  -webkit-transition: background-color .2s linear, height .2s ease-in-out;
+  height: 6px;
+  /* there must be 'bottom' for ps__thumb-x */
+  bottom: 2px;
+  /* please don't change 'position' */
+  position: absolute;
+}
+
+.ps__thumb-y {
+  background-color: #aaa;
+  border-radius: 6px;
+  transition: background-color .2s linear, width .2s ease-in-out;
+  -webkit-transition: background-color .2s linear, width .2s ease-in-out;
+  width: 6px;
+  /* there must be 'right' for ps__thumb-y */
+  right: 2px;
+  /* please don't change 'position' */
+  position: absolute;
+}
+
+.ps__rail-x:hover > .ps__thumb-x,
+.ps__rail-x:focus > .ps__thumb-x {
+  background-color: #999;
+  height: 11px;
+}
+
+.ps__rail-y:hover > .ps__thumb-y,
+.ps__rail-y:focus > .ps__thumb-y {
+  background-color: #999;
+  width: 11px;
+}
+
+/* MS supports */
+@supports (-ms-overflow-style: none) {
+  .ps {
+    overflow: auto !important;
+  }
+}
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .ps {
+    overflow: auto !important;
+  }
+}`
+
+const style = document.createElement('style')
+style.textContent = scrollbarcss
+document.body.appendChild(style)
 
 export default injectGame
