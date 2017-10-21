@@ -5,10 +5,11 @@
   "author": "v-trof <seva.trofimov2@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "style-loader": "^0.19.0",
     "vue": "^2.4.4",
     "vue-material": "^0.7.5",

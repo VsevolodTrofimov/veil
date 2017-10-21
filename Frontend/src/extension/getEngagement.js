@@ -22,7 +22,6 @@ export const remove = cbId => {
     return false
 }
 let wallSpySet = setInterval(() => {
-    console.log(window.wall)
     if(window.wall) {
         clearInterval(wallSpySet)
         console.log('wall engagement spy set')

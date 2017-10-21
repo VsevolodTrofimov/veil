@@ -4,7 +4,7 @@
         <md-button class="md-raised md-warn"
                    v-on:click="makeVerdict('offensive')"> Оскорбительный </md-button>
     
-        <md-card class='card'> <Comment v-bind:text="commentText" /> </md-card>
+        <md-card class='card'> <Comment v-bind="commentText" /> </md-card>
 
         <md-button class="md-raised md-primary"
                    v-on:click="makeVerdict('ok')"> Ничего плохого </md-button>
@@ -30,15 +30,18 @@
         },
         components: {
             Comment
-        },
-        mounted: () => {
-            store.dispatch('getDiscussions')
         }
     }
 </script>
 
 <style scoped>
     .card {
-        max-width: 660px;
+        width: 660px;
+    }
+
+    @media (max-width: 600px) {
+        .card {
+            width: 100%;
+        }
     }
 </style>

@@ -12,10 +12,11 @@ const store = new Vuex.Store({
         /**
          * Array of {done: {bool}, comments: {String[]})
          */
-        stage: 'comment',
+        stage: 'loading',
         discussions: [],
         longestDiscsussion: 0,
-        allDone: true,
+        commentsDone: true,
+        allDone: false,
         comments: {
             ok: [],
             offensive: []

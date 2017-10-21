@@ -9,7 +9,11 @@
                    md-column
                    class="content">
             <CommentRank v-if="stage==='comment'" />
-            <DiscussionRank v-else/>
+            <DiscussionRank v-else-if="stage==='discussion'"/>
+            <md-layout v-else md-column md-align='center' md-vertical-align='center'>
+                <md-spinner :md-indeterminate="true" />
+                <h4> Спасибо, что помогаете делать интернет лучше! </h4>
+            </md-layout>
         </md-layout>
     </div>
 </template>
@@ -22,11 +26,24 @@
     export default {
         name: 'app',
         computed: {
-            stage: () => store.state.stage
+            stage: () => {
+                console.log(store.state.stage)
+                return store.state.stage
+            }
         },
         components: {
             CommentRank,
-            DiscussionRank
+            DiscussionRank,
+        },
+        mounted: () => {
+            store.dispatch('getDiscussions')
+        },
+        watch: {
+            stage: val => {
+                if(val === 'done') {
+                    store.dispatch('sendToServer')
+                }
+            }
         }
     }
 </script>

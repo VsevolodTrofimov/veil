@@ -19,7 +19,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 48px;
+        min-width: 48px;
     }
 
     .card {

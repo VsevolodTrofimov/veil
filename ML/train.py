@@ -9,7 +9,8 @@ import nltk
 import string
 import re
 
-stopwords = []
+s = open('stopwords.txt', 'r', encoding='utf-8')
+stopwords = list(map(lambda x: x[:-1], s.readlines()))
 
 vectorizer = TfidfVectorizer()
 
@@ -45,11 +46,13 @@ for i in convs:
     number+=1
     s += i[1]
 print(convdocs)
+stemmer = nltk.stem.snowball.RussianStemmer()
 
 k=[]
 for i in docs:
     j = nltk.word_tokenize(i)
     j = [k for k in j if not k in string.punctuation]
+    j = [stemmer.stem(k) for k in j]
     j = [k for k in j if not k in stopwords]
     k.append(' '.join(j).lower())
 docs = k

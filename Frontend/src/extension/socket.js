@@ -18,9 +18,16 @@ import io from 'socket.io-client'
 
 console.log('socket')
 
-const socket = io('172.19.244.120:5000')
+const socket = io.connect('https://localhost:5000', {
+    rejectUnauthorized: false,
+    secure: true,
+    verify: false
+    // transports: ['websocket']
+})
 
-socket.on('connect', console.log);
+socket.on('connect', () => console.log('conn'))
+socket.on('response', data => console.log('d', data))
+
 socket.on('error', console.error)
 
 export default socket

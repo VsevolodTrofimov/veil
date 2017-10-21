@@ -2,9 +2,7 @@
     <md-list class='discussion'>
         <md-list-item v-for="(comment, idx) in comments" v-bind:key="idx">
             <div v-bind:class="{dark: idx % 2, item: true}">
-                <Comment v-bind:text="comment" 
-                        v-bind:user="comment.user || idx % 2 + 1"
-                />
+                <Comment v-bind="comment" />
             </div>
         </md-list-item>
     </md-list>
