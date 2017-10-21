@@ -20,7 +20,7 @@
         name: 'CommentRank',
         computed: {
             commentText() {
-                return store.getters.currentComment
+                return store.getters.currentComment || 'Loading'
             }
         },
         methods: {
