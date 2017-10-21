@@ -11,6 +11,7 @@ class Discussion(db.Model):
     protId = db.Column(db.String)
     users = db.Column(db.ARRAY(db.String))
     discussion = db.Column(db.JSON)
+    length = db.Column(db.Integer)
     veiled = db.Column(db.Boolean)
 
     def __init__(self, rootId, protId, users, discussions, veiled):

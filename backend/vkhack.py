@@ -72,7 +72,7 @@ def receive_comment(data):
         new_disc = Base(comment.postId, [[comment.commentId, comment.mentions, comment.text, comment.authorId]])
         users_disc = [u for u in new_disc.comments]
         db_disc = Discussion(comment.postId, comment.commentId, comment.authorId, users_disc,
-                             jsonpickle.encode(new_disc.comments), False)
+                             jsonpickle.encode(new_disc.comments), length(new_disc.comments), False)
 
         db.session.add(db_disc)
         db.session.commit()
@@ -84,6 +84,7 @@ def receive_comment(data):
             users_disc = [u for u in new_disc.comments]
             discussion.users = users_disc
             discussion.discussion = jsonpickle.encode(new_disc.comments)
+            discussion.length = len(new_disc.comments)
         db.session.commit()
 
     export_to_ml()
@@ -91,13 +92,22 @@ def receive_comment(data):
 
 def export_to_ml():
     exp_path = os.path.abspath(os.path.join(os.getcwd(), "../ML/pred_set"))
-    disc = Discussion.query.filter_by().all()
 
+    disc = Discussion.query.filter(Discussion.length >= 3).all()
     for d in disc:
-        open(os.path.join(exp_path, "id_%s_%s.txt" % (d.postID, d.rootId)), 'w')
+        f = open(os.path.join(exp_path, "id_%s_%s_3.txt" % (d.postID, d.rootId)), 'w')
         comments = [[k] + v for (k, v) in jsonpickle.decode(d.discussion)]
         new_disc = Base(d.rootId, comments)
+        f.write(new_disc.print2csv_last(3))
+        f.close()
 
+    disc = Discussion.query.filter(Discussion.length >= 5).all()
+    for d in disc:
+        f = open(os.path.join(exp_path, "id_%s_%s_5.txt" % (d.postID, d.rootId)), 'w')
+        comments = [[k] + v for (k, v) in jsonpickle.decode(d.discussion)]
+        new_disc = Base(d.rootId, comments)
+        f.write(new_disc.print2csv_last(5))
+        f.close()
 
 
 if __name__ == '__main__':
