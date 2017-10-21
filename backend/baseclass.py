@@ -9,14 +9,15 @@ def bfs(ments, diction, root):
     return flag
 
 
-class Base:
+class Base(object):
     comments = dict()
     root_id = -1 # id комментария подзащитного
     prot_id = 0 # id подзащитного
     chain = list() # список комментов из релевантной ветки, формата (id коммента, коммент)
-    def __init__(self, root_id, *args):
+
+    def __init__(self, root_id, comments):
         self.root_id = root_id
-        for i in args:
+        for i in comments:
             self.comments[i[0]] = [i[1], i[2], i[3]] # i[0] - id коммента, i[1] - список id меншнов, i[2] - коммент, i[3] - id комментатора
             if i[0]!=root_id:
                 self.addnew(i[1], i[2], i[0], i[3])
@@ -49,25 +50,3 @@ class Base:
         last = self.ret_last(n)
         for i in last:
             print(str(i[1]) + "\n" + str(i[0]))
-
-
-disc_id=0
-
-disc = Base(58833,
-            [58833, [-1], 'редиска и свекла', 5],
-            [58834, [58833, -1], 'хорошо', 3],
-            [58835, [58834], 'Ну и дурак', 5],
-            [58836, [58835, 58834], 'умный и хороший человек!', 3],
-            [58837, [-1, -1, -1], 'а я вообще левый', 2],
-            [58838, [58837, -1], 'а я тоже', 1],
-            [58839, [58835, 58834], 'умный и хороший человек!', 3],
-            [58840, [58835, 58834], 'умный и хороший человек!', 3],
-            [58841, [58835, 58834], 'умный и хороший человек!', 3],
-            )
-
-disc.addnew([58836], 'сволочь, гад', 58842, 4)
-print(disc.ret_last(15))
-print()
-disc.addnew([58833], 'сволочь, гад, мусор', 58843, 5)
-disc.addnew([-1], 'сволочь, гад, мусор1!!11', 58844, 7)
-print(disc.ret_last(3))
