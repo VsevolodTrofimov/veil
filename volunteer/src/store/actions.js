@@ -20,7 +20,7 @@ const parseDiscussions = respoce => {
 }
 
 const packDiscussions = discussions => {
-    retrun JSON.stringify(discussions)
+    return JSON.stringify(discussions)
 }
 
 export const getDiscussions = ({commit}) => {

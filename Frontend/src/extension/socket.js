@@ -18,8 +18,10 @@ import io from 'socket.io-client'
 
 console.log('socket')
 
-const socket = io({
-    url: 'http://localhost:5000',
+const socket = io.connect('https://localhost:5000', {
+    rejectUnauthorized: false,
+    secure: true,
+    verify: false
     // transports: ['websocket']
 })
 
