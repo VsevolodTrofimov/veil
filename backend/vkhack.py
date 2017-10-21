@@ -114,16 +114,15 @@ def receive_comment(sid, data):
     send_veil()
 
 
-@app.route('/getDiscussions/<string:userId>')
+@app.route('/getDiscussions')
 def send_discussions(userId):
     result = []
-    disc = Discussion.query.filter(Discussion.users.any(str(userId))).filter(Discussion.rated == False).limit(5).all()
+    disc = Discussion.query.filter(Discussion.rated == False).limit(5).all()
     for d in disc:
         dic = {}
         dic['postId'] = d.postId
         dic['comments'] = d.discussion
         result.append(dic)
-    print(result)
 
     return (jsonify(result))
 
