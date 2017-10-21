@@ -115,5 +115,4 @@ var game = {
 
     }
 };
-
 export default game
