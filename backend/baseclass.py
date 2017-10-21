@@ -3,7 +3,7 @@ def bfs(ments, diction, root):
     for i in ments:
         if i==root:
             return True
-        elif i!=-1:
+        elif i != "-1":
             if bfs(diction[i][0], diction, root):
                 return True
     return flag
@@ -11,12 +11,13 @@ def bfs(ments, diction, root):
 
 class Base(object):
     comments = dict()
-    root_id = -1 # id комментария подзащитного
-    prot_id = 0 # id подзащитного
+    root_id = "-1"  # id комментария подзащитного
+    prot_id = "0"  # id подзащитного
     chain = list() # список комментов из релевантной ветки, формата (id коммента, коммент)
     def __init__(self, root_id, comments):
         self.root_id = root_id
         for i in comments:
+            print(i)
             self.comments[i[0]] = [i[1], i[2], i[3]] # i[0] - id коммента, i[1] - список id меншнов, i[2] - коммент, i[3] - id комментатора
             if i[0]!=root_id:
                 self.addnew(i[1], i[2], i[0], i[3])

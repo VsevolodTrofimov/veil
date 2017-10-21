@@ -64,7 +64,7 @@ def send_veil():
         data['data']['post_id'] = d.postID
         data['data']['user_ids'] = [u for u in d.users if u != clients[request.sid]]
 
-        emit('response', json.dump(data), json=True, room=request.sid)
+        emit('response', data, json=True, room=request.sid)
 
 
 @socket.on('comment')
@@ -72,18 +72,20 @@ def receive_comment(data):
     our_guy = clients[str(request.sid)]
 
     comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'], data['mentions'])
-    if comment.postId == -1:
+    if comment.postId == "-1":
         print("Discussion - bad id.")
         send('Error. Bad id.')
 
 
     response = Discussion.query.filter_by(postId=comment.postId).all()
-    if not response:
+    if (not response) or (comment.mentions == ['-1'] and comment.authorId == our_guy):
         print("Discussion: no discussion. Creating new one.")
+        print([comment.commentId, comment.mentions, comment.text, comment.authorId])
         new_disc = Base(comment.postId, [[comment.commentId, comment.mentions, comment.text, comment.authorId]])
         users_disc = [u for u in new_disc.comments]
-        db_disc = Discussion(comment.postId, comment.commentId, comment.authorId, users_disc,
-                             jsonpickle.encode(new_disc.comments), len(new_disc.comments), False)
+        db_disc = Discussion(comment.postId + comment.commentId, comment.postId, comment.commentId, comment.authorId,
+                             users_disc,
+                             jsonpickle.encode(new_disc.comments), len(new_disc.comments), False, False)
 
         db.session.add(db_disc)
         db.session.commit()
@@ -100,6 +102,19 @@ def receive_comment(data):
 
     export_to_ml()
     send_veil()
+
+
+@socket.on('send_discussions')
+def send_discussions():
+    result = []
+    disc = Discussion.query.filter(Discussion.rated == True).limit(5).all()
+
+    for d in disc:
+        result.append(jsonpickle.decode(disc.discussion))
+
+    emit('send_discussions', result, json=True, room=request.sid)
+
+
 
 def export_to_ml():
     exp_path = path.abspath(path.join(getcwd(), "../ML/pred_set"))

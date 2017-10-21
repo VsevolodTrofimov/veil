@@ -5,15 +5,18 @@ db = SQLAlchemy()
 
 
 class Discussion(db.Model):
-    postId = db.Column(db.String, primary_key=True)
+    key = db.Column(db.String, primary_key=True)
+    postId = db.Column(db.String)
     rootId = db.Column(db.String)
     protId = db.Column(db.String)
     users = db.Column(db.ARRAY(db.String))
     discussion = db.Column(db.JSON)
     length = db.Column(db.Integer)
     veiled = db.Column(db.Boolean)
+    rated = db.Column(db.Boolean)
 
-    def __init__(self, postId, rootId, protId, users, discussions, length, veiled):
+    def __init__(self, key, postId, rootId, protId, users, discussions, length, veiled, rated):
+        self.key = key
         self.postId = postId
         self.rootId = rootId
         self.protId = protId
@@ -21,6 +24,7 @@ class Discussion(db.Model):
         self.discussion = discussions
         self.length = length
         self.veiled = veiled
+        self.rated = rated
 
 class Veils(db.Model):
     veilId = db.Column(UUID, primary_key=True)
