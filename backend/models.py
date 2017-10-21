@@ -7,18 +7,15 @@ db = SQLAlchemy()
 class Discussions(db.Model):
     __tablename__ = 'discussions'
     postId = db.Column(db.String, primary_key=True)
-    discussions = db.ARRAY(db.JSON)
-    timestamp = db.Column(db.TIMESTAMP)
-    #
-    #  [{}::json]
-    #
-
+    users = db.Column(db.ARRAY(db.String))
+    discussions = db.Column(db.ARRAY(db.String))
 
 class Veils(db.Model):
     __tablename__ = 'veils'
 
     veilId = db.Column(UUID, primary_key=True)
     postId = db.Column(db.String)
+    users = db.Column(db.ARRAY(db.String))
 
 
 class Comment(object):

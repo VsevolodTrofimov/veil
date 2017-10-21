@@ -8,6 +8,7 @@ def bfs(ments, diction, root):
                 return True
     return flag
 
+
 class Base:
     comments = dict()
     root_id = -1 # id комментария подзащитного
@@ -26,20 +27,29 @@ class Base:
         self.prot_id = self.comments[root_id][2]
         print(self.chain)
 
+
     def addnew(self, ments, comment, com_id, user_id):
         if bfs(ments, self.comments, self.root_id):
             self.chain.append(tuple([com_id, comment, user_id]))
+            self.comments[com_id] = [ments, comment, user_id]
+        print(self.chain)
 
     def ret_last(self, n): # возвращает последние n реплаев
         k=[]
         if n>len(self.chain):
             for i in self.chain:
-                k.append(i[1])
+                k.append((i[0], i[1]))
             return k
         else:
             for i in range(1, n+1):
-                k.append(self.chain[-1*i][1])
+                k.append((self.chain[-1 * i][0], self.chain[-1 * i][1]))
             return k
+
+    def print2csv_last(self, n):
+        last = self.ret_last(n)
+        for i in last:
+            print(str(i[1]) + "\n" + str(i[0]))
+
 
 disc_id=0
 
@@ -54,4 +64,10 @@ disc = Base(58833,
             [58840, [58835, 58834], 'умный и хороший человек!', 3],
             [58841, [58835, 58834], 'умный и хороший человек!', 3],
             )
-print(disc.ret_last(7))
+
+disc.addnew([58836], 'сволочь, гад', 58842, 4)
+print(disc.ret_last(15))
+print()
+disc.addnew([58833], 'сволочь, гад, мусор', 58843, 5)
+disc.addnew([-1], 'сволочь, гад, мусор1!!11', 58844, 7)
+print(disc.ret_last(3))
