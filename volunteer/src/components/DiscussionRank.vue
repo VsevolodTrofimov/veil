@@ -25,19 +25,16 @@
         name: 'DiscussionRank',
         computed: {
             discComments: () => {
-                return store.state.discussions[2] || []
+                return store.getters.currentDiscussion.comments || []
             }
         },
         methods: {
             makeVerdict: verdict => {
-                store.dispatch('verdict', verdict)
+                store.dispatch('verdictDiscussion', verdict)
             }
         },
         components: {
             Discussion
-        },
-        mounted: () => {
-            store.dispatch('getDiscussions')
         }
     }
 </script>

@@ -9,7 +9,8 @@
                    md-column
                    class="content">
             <CommentRank v-if="stage==='comment'" />
-            <DiscussionRank v-else/>
+            <DiscussionRank v-else-if="stage==='discussion'"/>
+            <md-spinner :md-indeterminate="true" v-else />
         </md-layout>
     </div>
 </template>
@@ -22,11 +23,24 @@
     export default {
         name: 'app',
         computed: {
-            stage: () => store.state.stage
+            stage: () => {
+                console.log(store.state.stage)
+                return store.state.stage
+            }
         },
         components: {
             CommentRank,
-            DiscussionRank
+            DiscussionRank,
+        },
+        mounted: () => {
+            store.dispatch('getDiscussions')
+        },
+        watch: {
+            stage: val => {
+                if(val === 'done') {
+                    store.dispatch('sendToServer')
+                }
+            }
         }
     }
 </script>

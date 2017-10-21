@@ -3,7 +3,7 @@
     "description": "Спасает детей от кибуербуллинга в комментариях",
     "content_scripts": [
     {
-      "matches": [ "*://vk.com/*" ],
+      "matches": [ "*://vk.com/*"],
       "js": ["inline.js" ]
     }
     ],
