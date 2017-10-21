@@ -42,19 +42,25 @@ window.show = function() {
     vkshow(...arguments)
 }
 
-wall.vkshowReplies = wall.showReplies
-wall.showReplies = function() {
-    spy()
-    return wall.vkshowReplies(...arguments)
-}
+let wallSpySet = setInterval(() => {
+    if(window.wall) {
+        clearInterval(wallSpySet)
+        console.log('wall spy set')
+        window.wall.vkshowReplies = wall.showReplies
+        window.wall.showReplies = function() {
+            spy()
+            return window.wall.vkshowReplies(...arguments)
+        }
+    }
+}, 100)
 
 
 let WkViewSpySet = setInterval(() => {
     if(window.WkView) {
         clearInterval(WkViewSpySet)
         console.log('set WkView spy')
-        WkView.vkarrows = WkView.updateArrows
-        WkView.updateArrows = function() {
+        window.WkView.vkarrows = window.WkView.updateArrows
+        window.WkView.updateArrows = function() {
             spy()
             return WkView.vkarrows(...arguments)
         }

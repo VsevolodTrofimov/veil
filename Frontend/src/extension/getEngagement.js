@@ -1,3 +1,5 @@
+import * as comments from './comments'
+
 let nextCbId = 0
 const spyCb = []
 
@@ -19,10 +21,23 @@ export const remove = cbId => {
     }
     return false
 }
+let wallSpySet = setInterval(() => {
+    console.log(window.wall)
+    if(window.wall) {
+        clearInterval(wallSpySet)
+        console.log('wall engagement spy set')
+        const vksendReply = wall.sendReply
 
-const vksendReply = wall.sendReply
+        wall.sendReply = function() {
+            spyCb.forEach(cb => cb.exec(arguments[0]))
+            return vksendReply.call(this, ...arguments)
+        }
+    }
+}, 100)
 
-wall.sendReply = function() {
-    spyCb.forEach(cb => cb.exec(arguments[0]))
-    return vksendReply.call(this, ...arguments)
+const handleEngage = postId => {
+    console.log('engaged')
+    comments.watchPost(postId, console.warn)
 }
+
+add(handleEngage)
