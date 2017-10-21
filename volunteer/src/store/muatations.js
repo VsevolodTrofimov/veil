@@ -13,11 +13,11 @@ export const init = (state, discussions) =>  {
 }
 
 export const verdict = function (state, {verdict, comment}) {
-    comment.offensive = verdict === 'offensive'
+    comment.offensive = verdict === 'offensive' ? 1 : 0
 }
 
 export const verdictDiscussion = function (state, {verdict, discussion}) {
-    discussion.offensive = verdict === 'offensive'
+    discussion.offensive = verdict === 'offensive' ? 1 : 0
 }
 
 const outOfBonds = (arr, idx) => {

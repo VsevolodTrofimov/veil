@@ -2,7 +2,8 @@
 
 var gameMap = {
     'clickbait': {
-        text: ['Достали тролли?'],
+        text: [],
+        wall: 'Достали тролли в комментариях?',
         actions: [{
             text: 'Ага!',
             goto: 'resist'
@@ -13,7 +14,10 @@ var gameMap = {
     },
     'im good': {
         text: ['Так держать! Но не забывай помогать тем, кто трепетнее к этому отностится'],
-        actions: []
+        actions: [{
+            text: 'Игнорю их и не парюсь',
+            goto: 'im good'
+        }]
     }
 }
 
@@ -23,7 +27,7 @@ const $makeMessageBox = (text, from='bot') => {
     $message.style.padding = '15px'
     $message.style.marginBottom = '20px'
     $message.style.border = '1px solid #eee'
-    
+
     if(from === 'player') {
         $message.style.alignSelf = 'flex-end'
         $message.style.background = '#edf0f5'
@@ -53,9 +57,17 @@ const renderActions = (context, actions) => {
 }
 
 const renderStage = (context, stage) => {
+    context.$wall.innerHTML = ''
+    context.$wall.style.flex = '0'
+
     context.map[stage].text.forEach(text => {
         context.$chatbox.appendChild($makeMessageBox(text))
     })
+    
+    if(context.map[stage].wall) {
+        context.$wall.style.flex = '1'
+        context.$wall.innerHTML = context.map[stage].wall
+    }
 
     renderActions(context, context.map[stage].actions)
 }
@@ -68,9 +80,12 @@ const transition = (context, action) => {
 
 const makeContext = (map, $game) => ({
     map,
+    $wall: $game.querySelector('.wall'),
     $chatbox: $game.querySelector('.chat'),
     $actionbox: $game.querySelector('.actions')
 })
+
+//style="display:flex; flex-direction: column; justify-content: flex-end; padding: 0 15px; overflow-y: auto; flex: 1;"
 
 const $makeGame = () => {
     const $game = document.createElement('div')
@@ -82,7 +97,30 @@ const $makeGame = () => {
                         justify-content: flex-end;
                         border-radius: 4px;"
                       >
-                        <div class='chat' style="display:flex; flex-direction: column; justify-content: flex-start; padding: 0 15px;"> </div>
+                        <div class='wall' style="padding: 15px; flex: 1; font-size: 48px; font-weight: 900; line-height: 1.2;"> </div>
+                        <div class='ui_scroll_container ui_scroll_default_theme ui_scroll_hidden' >
+                            <div class='ui_scroll_overflow'>
+                                <div class='ui_scroll_outer'>
+                                    <div class='ui_scroll_inner tt_noappend'>
+                                        <div class='chat ui_scroll_content '> </div>
+                                    </div>
+                                </div>
+                                <div class="ui_scroll_resize_sensor">
+                                    <div class="ui_scroll_resize_sensor ui_scroll_resize_expand">
+                                        <div style="width: 326px; height: 792px;"></div>
+                                    </div>
+                                    <div class="ui_scroll_resize_sensor ui_scroll_resize_shrink">
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="ui_scroll_bar_container">
+                                <div class="ui_scroll_bar_outer">
+                                    <div class="ui_scroll_bar_inner" style="height: 120.403px; transform: translateY(0px);">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class='actions submit_post' style="display:flex; felx-direction: row; flex-wrap: wrap;"> </div>
                       </div>`
 
