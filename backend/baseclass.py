@@ -25,14 +25,12 @@ class Base(object):
                                          self.comments[root_id][1],
                                          self.comments[root_id][2]])) # root_id - id коммента подзащитного, comments[root_id] - коммент подзащитного
         self.prot_id = self.comments[root_id][2]
-        print(self.chain)
 
 
     def addnew(self, ments, comment, com_id, user_id):
         if bfs(ments, self.comments, self.root_id):
             self.chain.append(tuple([com_id, comment, user_id]))
             self.comments[com_id] = [ments, comment, user_id]
-        print(self.chain)
 
     def ret_last(self, n): # возвращает последние n реплаев
         k=[]
@@ -48,8 +46,9 @@ class Base(object):
     def print2csv_last(self, n):
         last = self.ret_last(n)
         s = ""
-        for i in last:
-            s += str(i[1]) + "\n" + str(i[0])
+        for (com_id, text) in last:
+            s += str(text) + "\r\n" + str(com_id) + "\r\n"
+        return s
 
 
 """
