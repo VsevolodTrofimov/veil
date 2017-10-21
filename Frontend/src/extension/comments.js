@@ -19,6 +19,14 @@ export const parseReplyLink = ($replyLink, postId = -1) => {
     else return {commentId: -1}
 }
 
+//yeah it shuld be double escaped
+const htmlToText = html => {
+    html = html.replace(/(<br\s*\/?>)/g, ' ')
+    html = html.replace(/<[^>]*>/g, '')
+
+    return html
+}
+
 export const parseComment = ($comment, postId = -1) => {
     const commentId = $comment.getAttribute('data-post-id')
     const authorId = $comment.querySelector('a.author').getAttribute('data-from-id')
@@ -26,7 +34,8 @@ export const parseComment = ($comment, postId = -1) => {
     const replyLinks = Array.from($comment.querySelectorAll('a.reply_to')) 
     const mentions = replyLinks.map($replyLink => parseReplyLink($replyLink).commentId)
 
-    const text = $comment.querySelector('.reply_text').textContent
+    const text = htmlToText($comment.querySelector('.wall_reply_text')
+                         .innerHTML)
 
     return {commentId, authorId, postId, text, mentions}
 }
