@@ -33,7 +33,7 @@ const parseServerData = discussions => {
     
     const res = arr.map(disc => {
         console.log(disc.comments)
-        const comments = Object.values(JSON.parsed(disc.comments)).map(parseComment)
+        const comments = Object.values(JSON.parse(disc.comments)).map(parseComment)
 
         return {comments}
     })
