@@ -121,6 +121,7 @@ def receive_comment(sid, data):
             db.session.commit()
 
     export_to_ml()
+    read_res_and_write_to_db()
     send_veil(sid)
 
 
@@ -132,7 +133,7 @@ def send_veils(userId):
 @app.route('/data/getDiscussions')
 def send_discussions():
     result = []
-    disc = Discussion.query.filter(Discussion.rated == False).limit(5).all()
+    disc = Discussion.query.filter(Discussion.rated == False).limit(2).all()
     for d in disc:
         dic = {}
         dic['postId'] = d.postId
@@ -149,18 +150,19 @@ def receive_discussions_and_export_to_ml():
 
     exp_path = path.abspath(path.join(getcwd(), "../ML/train_set"))
 
-    root_id = dat['comments'][0][0]
-    discussion_verdict = dat['offensive']
+    # root_id = dat['comments'][0][0]
+    # discussion_verdict = dat['offensive']
 
-    f = open(path.join(exp_path, "id_%s_%s_%s.txt" % (dat['postId'], root_id, discussion_verdict)), 'w')
-    s = ""
-    for c in dat['comments']:
-        com_id = c[0]
-        text = c[1]
-        verdict = c[2]
-        s += text + verdict + '\r\n' + com_id + "\r\n"
-        f.write(s)
-    f.close()
+    # f = open(path.join(exp_path, "id_%s_%s_%s.txt" % (dat['postId'], root_id, discussion_verdict)), 'w')
+    # s = ""
+    # for c in dat['comments']:
+    #    com_id = c[0]
+    #    text = c[1]
+    #    verdict = c[2]
+    #    s += text + verdict + '\r\n' + com_id + "\r\n"
+    #    f.write(s)
+    # f.close()
+    return ('OK')
 
 
 def export_to_ml():
