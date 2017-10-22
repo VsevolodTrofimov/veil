@@ -1,16 +1,13 @@
-def bfs(ments, diction, root):
+def bfs(ment, diction, root):
     flag = False
-    print(*ments)
-    print(ments)
-    print(type(ments))
+    print(*ment)
+    print(ment)
+    print(type(ment))
 
-    for i in ments:
-        print(i)
-        if i==root:
-            return True
-        elif i != "-1" and i != '':
-            if bfs(diction[i][0], diction, root):
-                return True
+    if ment == '-1':
+        return False
+    else:
+        return bfs(diction[ment][0], diction, root)
     return flag
 
 
