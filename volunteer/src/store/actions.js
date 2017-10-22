@@ -1,3 +1,5 @@
+import xhr from 'superagent'
+
 export const verdict = ({state, getters, commit}, verdict) => { 
     //send to server
     const comment = getters.currentComment
@@ -13,14 +15,6 @@ export const verdictDiscussion = ({state, getters, commit}, verdict) => {
 
     commit('verdictDiscussion', {verdict, discussion})
     commit('nextDiscussion')
-}
-
-const parseDiscussions = respoce => {
-    
-}
-
-const packDiscussions = discussions => {
-    return JSON.stringify(discussions)
 }
 
 export const getDiscussions = ({commit}) => {
@@ -45,8 +39,15 @@ export const getDiscussions = ({commit}) => {
 
 export const sendToServer = ({state, commit, dispatch}) => {
     //send store.discussions
-    const discussions = packDiscussions(state.discussions)
+
+    const discussions = JSON.parse(JSON.stringify(state.discussions))
     console.log('disc', discussions)
-    fetch('')
-        .then(dispatch('getDiscussions'))
+
+    discussions.forEach(desc => {
+        xhr.post('/data/postDiscussion')
+            .type('form')        
+            .send({data: JSON.stringify(desc)})
+            .end(resp => console.log(resp))
+    })
+
 }
