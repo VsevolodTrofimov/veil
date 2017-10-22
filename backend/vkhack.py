@@ -67,16 +67,16 @@ def get_userid_and_send_all_veils(sid, data):
     print("%s connected" % userScreenName)
 
     with app.app_context():
-        send_veil()
+        send_veil(sid)
 
 
 @app.route('/send_veil')
-def send_veil():
+def send_veil(sid):
     for d in Discussion.query.filter(Discussion.veiled == False).all():
         data = {}
         data['data'] = {}
         data['data']['post_id'] = d.postId
-        data['data']['user_ids'] = [u for u in d.users if u != clients[request.sid]]
+        data['data']['user_ids'] = [u for u in d.users if u != clients[sid]]
 
         sio.emit('veil_send', data)
 
