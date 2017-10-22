@@ -161,22 +161,22 @@ def receive_discussions_and_export_to_ml():
 
 def export_to_ml():
     exp_path = path.abspath(path.join(getcwd(), "../ML/pred_set"))
+    with app.app_context():
+        disc = Discussion.query.filter(Discussion.length >= 3).all()
+        for d in disc:
+            f = open(path.join(exp_path, "id_%s_%s_3.txt" % (d.postId, d.rootId)), 'w')
+            comments = [[k] + v for (k, v) in jsonpickle.decode(d.discussion).items()]
+            new_disc = Base(d.rootId, comments)
+            f.write(new_disc.print2csv_last(3))
+            f.close()
 
-    disc = Discussion.query.filter(Discussion.length >= 3).all()
-    for d in disc:
-        f = open(path.join(exp_path, "id_%s_%s_3.txt" % (d.postId, d.rootId)), 'w')
-        comments = [[k] + v for (k, v) in jsonpickle.decode(d.discussion).items()]
-        new_disc = Base(d.rootId, comments)
-        f.write(new_disc.print2csv_last(3))
-        f.close()
-
-    disc = Discussion.query.filter(Discussion.length >= 5).all()
-    for d in disc:
-        f = open(path.join(exp_path, "id_%s_%s_5.txt" % (d.postId, d.rootId)), 'w')
-        comments = [[k] + v for (k, v) in jsonpickle.decode(d.discussion)]
-        new_disc = Base(d.rootId, comments)
-        f.write(new_disc.print2csv_last(5))
-        f.close()
+        disc = Discussion.query.filter(Discussion.length >= 5).all()
+        for d in disc:
+            f = open(path.join(exp_path, "id_%s_%s_5.txt" % (d.postId, d.rootId)), 'w')
+            comments = [[k] + v for (k, v) in jsonpickle.decode(d.discussion)]
+            new_disc = Base(d.rootId, comments)
+            f.write(new_disc.print2csv_last(5))
+            f.close()
 
 
 def read_res_and_write_to_db():
@@ -188,10 +188,11 @@ def read_res_and_write_to_db():
         k.append(tuple([re.split(r'[._]', i)[1:-2], a[0]]))
         remove(path.join(res_path, i))
 
-    for v in k:
-        d = Discussion.query.filter(Discussion.postId == v[0][0]).filter(Discussion.rootId == v[0][1]).first()
-        d.veiled = True if (v[1][1] == '1') else False
-        db.session.commit()
+    with app.app_context():
+        for v in k:
+            d = Discussion.query.filter(Discussion.postId == v[0][0]).filter(Discussion.rootId == v[0][1]).first()
+            d.veiled = True if (v[1][1] == '1') else False
+            db.session.commit()
 
 if __name__ == '__main__':
     # socket.run(app, port=5000, keyfile='key.pem', certfile='cert.pem')
