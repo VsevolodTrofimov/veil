@@ -125,7 +125,8 @@ def receive_comment(sid, data):
 def send_veils(userId):
     pass
 
-@app.route('/getDiscussions')
+
+@app.route('/data/getDiscussions')
 def send_discussions():
     result = []
     disc = Discussion.query.filter(Discussion.rated == False).limit(5).all()
@@ -138,7 +139,7 @@ def send_discussions():
     return (jsonify(result))
 
 
-@app.route('/postDiscussion', methods=['POST'])
+@app.route('/data/postDiscussion', methods=['POST'])
 def receive_discussions_and_export_to_ml():
     data = request.form['data']
     dat = json.loads(data)
