@@ -128,6 +128,7 @@ def send_veils(userId):
 
 @app.route('/data/getDiscussions')
 def send_discussions():
+    print("PIZDA")
     result = []
     disc = Discussion.query.filter(Discussion.rated == False).limit(5).all()
     for d in disc:
