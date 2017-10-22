@@ -24,7 +24,7 @@ import jsonpickle
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://test_user:123456@localhost/veil'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:3019@localhost/postgres'
 
 db.init_app(app)
 with app.app_context():
@@ -114,8 +114,8 @@ def receive_comment(sid, data):
     send_veil()
 
 
-@app.route('/getDiscussions')
-def send_discussions(userId):
+@app.route('/data/getDiscussions')
+def send_discussions():
     result = []
     disc = Discussion.query.filter(Discussion.rated == False).limit(5).all()
     for d in disc:
@@ -127,7 +127,7 @@ def send_discussions(userId):
     return (jsonify(result))
 
 
-@app.route('/postDiscussion', methods=['POST'])
+@app.route('/data/postDiscussion', methods=['POST'])
 def receive_discussions_and_export_to_ml():
     data = request.form['data']
     dat = json.loads(data)
