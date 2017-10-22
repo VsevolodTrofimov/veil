@@ -92,7 +92,7 @@ def receive_comment(sid, data):
         sio.emit('comment_reply', 'Error. Bad id.')
 
     with app.app_context():
-        response = Discussion.query.filter_by(postId=comment.postId).all()
+        response = Discussion.query.filter_by(key=comment.postId + comment.commentId).all()
         if (not response):
             print("Discussion: no discussion. Creating new one.")
             new_disc = Base(comment.postId, [[comment.commentId, comment.mentions, comment.text, comment.authorId]])
