@@ -136,7 +136,7 @@ def send_discussions():
         dic['comments'] = d.discussion
         result.append(dic)
 
-    return (result)
+    return (json.dumps(result))
 
 
 @app.route('/data/postDiscussion', methods=['POST'])
