@@ -111,7 +111,7 @@ def receive_comment(sid, data):
             for discussion in response:
                 comments = [[k] + v for (k, v) in jsonpickle.decode(discussion.discussion).items()]
                 new_disc = Base(discussion.rootId, comments)
-                new_disc.addnew(list(comment.mentions), comment.text, comment.commentId, comment.authorId)
+                new_disc.addnew(comment.mentions, comment.text, comment.commentId, comment.authorId)
                 users_disc = [u for u in new_disc.comments]
                 discussion.users = users_disc
                 discussion.discussion = jsonpickle.encode(new_disc.comments)
