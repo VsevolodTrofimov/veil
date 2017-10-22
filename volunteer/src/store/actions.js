@@ -26,7 +26,7 @@ const parseComment = comment => {
 }
 
 const parseServerData = discussions => {
-    const escaped = discussions.replace(/"s*{/g, '{').replace(/}s*"/g, '}')
+    const escaped = discussions.replace(/"\s*{/g, '{').replace(/}\s*"/g, '}')
     const arr = JSON.parse(escaped)
     
     const res = arr.map(disc => {
