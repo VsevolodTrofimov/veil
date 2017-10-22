@@ -75,7 +75,7 @@ const $makeGame = () => {
     $game.innerHTML = `<div style="
                         width: 100%;
                       ">
-                        <div class='wall' style="padding: 15px; flex: 1; font-size: 48px; font-weight: 900; line-height: 1.2;"> </div>
+                        <div class='wall' style="padding: 15px; flex: 1; font-size: 48px; font-weight: 900; line-height: 1.2; postion: absolute;"> </div>
                         <div class='chat-wrap' style='height: 400px; overflow: auto; position: relative; padding: 15px 15px 0 15px;'> 
                             <div class='chat' style="display:flex; flex-direction: column; justify-content: flex-end;"> </div>
                         </div>
