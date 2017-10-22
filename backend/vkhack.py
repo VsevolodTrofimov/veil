@@ -70,12 +70,14 @@ def connect(sid, environ):
 
 
 @sio.on('disconnect')
-def disconnect(sid, environ):
+def disconnect(sid):
     print('DISCONNECTED: %s' % clients[sid])
 
 
 @sio.on('connected')
 def get_userid_and_send_all_veils(sid, data):
+    print("HUY")
+    print(data)
     userId = data['userId']
     response_raw = urllib.request.urlopen(
         "https://api.vk.com/method/utils.resolveScreenName?screen_name=" + userId).read().decode("utf-8")
