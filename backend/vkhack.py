@@ -82,9 +82,10 @@ def send_veil(sid):
 
 @sio.on('comment')
 def receive_comment(sid, data):
-    print('RECEIVE COMMENT', data)
+
     our_guy = clients[str(sid)]
     data = json.loads(data)
+    print('RECEIVE COMMENT', data)
 
     comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'], data['mentions'])
     if comment.postId == "-1":
@@ -92,7 +93,7 @@ def receive_comment(sid, data):
 
     with app.app_context():
         response = Discussion.query.filter_by(key=comment.postId + comment.commentId).all()
-        if (not response):
+        if (not response) and (our_guy == clients[sid]):
             print("Discussion: no discussion. Creating new one.")
             new_disc = Base(comment.postId, [[comment.commentId, comment.mentions, comment.text, comment.authorId]])
             users_disc = [u for u in new_disc.comments]
