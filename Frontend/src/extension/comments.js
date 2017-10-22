@@ -16,7 +16,7 @@ export const parseReplyLink = ($replyLink, postId = -1) => {
 
     if($originalComment)
         return parseComment($originalComment, postId)
-    else return {commentId: -1}
+    else return {commentId: '-1'}
 }
 
 //yeah it shuld be double escaped
