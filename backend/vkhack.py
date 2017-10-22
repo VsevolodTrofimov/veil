@@ -149,18 +149,19 @@ def receive_discussions_and_export_to_ml():
 
     exp_path = path.abspath(path.join(getcwd(), "../ML/train_set"))
 
-    root_id = dat['comments'][0][0]
-    discussion_verdict = dat['offensive']
+    # root_id = dat['comments'][0][0]
+    # discussion_verdict = dat['offensive']
 
-    f = open(path.join(exp_path, "id_%s_%s_%s.txt" % (dat['postId'], root_id, discussion_verdict)), 'w')
-    s = ""
-    for c in dat['comments']:
-        com_id = c[0]
-        text = c[1]
-        verdict = c[2]
-        s += text + verdict + '\r\n' + com_id + "\r\n"
-        f.write(s)
-    f.close()
+    # f = open(path.join(exp_path, "id_%s_%s_%s.txt" % (dat['postId'], root_id, discussion_verdict)), 'w')
+    # s = ""
+    # for c in dat['comments']:
+    #    com_id = c[0]
+    #    text = c[1]
+    #    verdict = c[2]
+    #    s += text + verdict + '\r\n' + com_id + "\r\n"
+    #    f.write(s)
+    # f.close()
+    return ('OK')
 
 
 def export_to_ml():
