@@ -7,7 +7,7 @@ def bfs(ments, diction, root):
     for i in ments:
         if i==root:
             return True
-        elif i != "-1":
+        elif i != "-1" and i != '':
             if bfs(diction[i][0], diction, root):
                 return True
     return flag
