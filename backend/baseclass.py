@@ -4,8 +4,6 @@ def bfs(ments, diction, root):
     print(ments)
     print(type(ments))
     ments = ''.join(ments)
-    ments = [k[2:-1] for k in ments.split(',')]
-    ments[-1] = ments[-1][:-1]
 
     for i in ments:
         if i==root:
