@@ -7,7 +7,7 @@
 #       userId
 #
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 # from flask_socketio import SocketIO, send, emit
 import socketio
 import eventlet
@@ -37,7 +37,7 @@ clients = {}
 
 @app.route('/')
 def home():
-    return ''
+    render_template('index.html')
 
 
 @sio.on('connect')
