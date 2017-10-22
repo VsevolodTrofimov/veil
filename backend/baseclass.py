@@ -5,6 +5,8 @@ def bfs(ment, diction, root):
 
     if ment == '-1':
         return False
+    elif diction[ment][2] == root:
+        return True
     else:
         return bfs(diction[ment][0], diction, root)
     return flag
