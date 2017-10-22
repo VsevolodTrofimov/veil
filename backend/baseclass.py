@@ -1,6 +1,7 @@
 def bfs(ments, diction, root):
     flag = False
-    print(ments)
+    print('MENTS ', ments)
+    print(type(ments))
     for i in ments:
         if i==root:
             return True
