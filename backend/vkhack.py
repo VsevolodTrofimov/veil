@@ -49,6 +49,7 @@ def connect(sid, environ):
 @sio.on('disconnect')
 def disconnect(sid):
     print('DISCONNECTED: %s' % clients[sid])
+    del clients[sid]
 
 
 @sio.on('connected')
