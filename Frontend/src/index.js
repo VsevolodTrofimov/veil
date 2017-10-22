@@ -23,6 +23,8 @@ socket.on('error', console.error)
 const handleEngage = postId => {
     console.log('engaged')
     comments.watchPost(postId, comment => {
+        if(comment.commentId.startsWith('0_')) return
+        
         console.log('emit', comment)
         socket.emit('comment', JSON.stringify(comment))
     })
