@@ -105,6 +105,7 @@ def receive_comment(sid, data):
             db.session.add(db_disc)
             db.session.commit()
         else:
+            print("Discussion: exists. APPEND")
             for discussion in response:
                 comments = [[k] + v for (k, v) in jsonpickle.decode(discussion.discussion).items()]
                 new_disc = Base(discussion.rootId, comments)
