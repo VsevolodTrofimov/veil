@@ -98,6 +98,8 @@ def receive_comment(sid, data):
             print("Discussion: no discussion. Creating new one.")
             new_disc = Base(comment.postId, [[comment.commentId, comment.mentions, comment.text, comment.authorId]])
             users_disc = [u for u in new_disc.comments]
+            print(new_disc.comments)
+            print(jsonpickle.encode(new_disc.comments))
             db_disc = Discussion(comment.postId + comment.commentId, comment.postId, comment.commentId,
                                  comment.authorId,
                                  users_disc,
