@@ -4,7 +4,7 @@ import * as engageSpy from './extension/getEngagement'
 
 import inject from './extension/inject'
 
-// import socket from './extension/socket'
+import socket from './extension/socket'
 
 module.exports = {
     veil, comments, inject
