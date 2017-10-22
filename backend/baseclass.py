@@ -1,8 +1,10 @@
 def bfs(ments, diction, root):
     flag = False
-    print('MENTS ', ments)
-    print(type(ments))
-    for i in list(ments):
+
+    ments = [k[2:-1] for k in ments.split(',')]
+    ments[-1] = ments[-1][:-1]
+
+    for i in ments:
         if i==root:
             return True
         elif i != "-1":
