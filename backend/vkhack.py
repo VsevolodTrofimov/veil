@@ -93,9 +93,8 @@ def receive_comment(sid, data):
 
     with app.app_context():
         response = Discussion.query.filter_by(postId=comment.postId).all()
-        if (not response) or (comment.mentions == ['-1'] and comment.authorId == our_guy):
+        if (not response):
             print("Discussion: no discussion. Creating new one.")
-            print([comment.commentId, comment.mentions, comment.text, comment.authorId])
             new_disc = Base(comment.postId, [[comment.commentId, comment.mentions, comment.text, comment.authorId]])
             users_disc = [u for u in new_disc.comments]
             db_disc = Discussion(comment.postId + comment.commentId, comment.postId, comment.commentId,
