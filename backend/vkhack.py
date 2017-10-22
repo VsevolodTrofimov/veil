@@ -68,23 +68,23 @@ def get_userid_and_send_all_veils(sid, data):
         send_veil(sid)
 
 
-@app.route('/send_veil')
 def send_veil(sid):
-    for d in Discussion.query.filter(Discussion.veiled == False).all():
-        data = {}
-        data['data'] = {}
-        data['data']['post_id'] = d.postId
-        data['data']['user_ids'] = [u for u in d.users if u != clients[sid]]
-        print('VEIL', data)
+    with app.app_context():
+        for d in Discussion.query.filter(Discussion.veiled == False).all():
+            data = {}
+            data['data'] = {}
+            data['data']['post_id'] = d.postId
+            data['data']['user_ids'] = [u for u in d.users if u != clients[sid]]
+            print('VEIL', data)
 
-        sio.emit('veil_send', data)
+            sio.emit('veil_send', data)
 
 
 @sio.on('comment')
 def receive_comment(sid, data):
+    print(data)
     our_guy = clients[str(sid)]
     data = json.loads(data)
-    print(data)
 
     comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'], data['mentions'])
     if comment.postId == "-1":
