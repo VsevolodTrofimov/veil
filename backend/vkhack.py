@@ -194,14 +194,14 @@ def read_res_and_write_to_db():
 if __name__ == '__main__':
     # socket.run(app, port=5000, keyfile='key.pem', certfile='cert.pem')
     #   app.run(app, port=5000)
-    app = socketio.Middleware(sio, app)
+    mid = socketio.Middleware(sio, app)
 
     eventlet.wsgi.server(eventlet.wrap_ssl(eventlet.listen(('194.67.208.71', 5000)),
                                            certfile='/etc/letsencrypt/live/vkhack.v-trof.ru/cert.pem',
                                            keyfile='/etc/letsencrypt/live/vkhack.v-trof.ru/privkey.pem',
                                            server_side=True,
                                            ssl_version=ssl.PROTOCOL_SSLv23),
-                         app)
+                         mid)
 
 
 # eventlet.wsgi.server(eventlet.listen(('194.67.208.71', 5000)), app)
