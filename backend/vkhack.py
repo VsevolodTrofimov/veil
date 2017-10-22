@@ -49,7 +49,7 @@ def connect(sid, environ):
 @sio.on('disconnect')
 def disconnect(sid):
     print('DISCONNECTED: %s' % clients[sid])
-    del clients[sid]
+    # del clients[sid]
 
 
 @sio.on('connected')
@@ -89,7 +89,6 @@ def receive_comment(sid, data):
     comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'], data['mentions'])
     if comment.postId == "-1":
         print("Discussion - bad id.")
-        sio.emit('comment_reply', 'Error. Bad id.')
 
     with app.app_context():
         response = Discussion.query.filter_by(key=comment.postId + comment.commentId).all()
