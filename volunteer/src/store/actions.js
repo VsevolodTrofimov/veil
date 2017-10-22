@@ -18,20 +18,26 @@ export const verdictDiscussion = ({state, getters, commit}, verdict) => {
 }
 
 const parseComment = comment => {
+    console.log(comment)
+
+    let text = decodeURIComponent(JSON.parse('"' + comment[1] + '"'))
+    if(text.startsWith("b'")) text = text.substring(2, text.length - 1)
+
     return {
         //escaping utf8
-        text: decodeURIComponent(JSON.parse('"' + comment[1].replace(/\"/g, '\\"') + '"')),
+        text: text,
         authorId: comment[2]
     }
 }
 
 const parseServerData = discussions => {
-    const escaped = discussions.replace(/"\s*{/g, '{').replace(/}\s*"/g, '}')
-    console.log(escaped)
-    const arr = JSON.parse(escaped)
+    // const escaped = discussions.replace(/"\s*{/g, '{').replace(/}\s*"/g, '}')
+    // console.log(escaped)
+    const arr = JSON.parse(discussions)
     
     const res = arr.map(disc => {
-        const comments = Object.values(disc.comments).map(parseComment)
+        console.log(disc.comments)
+        const comments = Object.values(JSON.parse(disc.comments)).map(parseComment)
 
         return {comments}
     })
