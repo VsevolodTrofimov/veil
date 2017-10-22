@@ -1,4 +1,5 @@
 export const init = (state, discussions) =>  {
+    console.log(discussions)
     state.discussions = discussions 
     state.longestDiscsussion = discussions
                                 .reduce((max, d) => d.comments.length > max 
@@ -8,6 +9,7 @@ export const init = (state, discussions) =>  {
     state.cursor.discussion = 0
 
     state.commentsDone = false
+    state.stage = 'comment'
     if(discussions.length === 0)
         state.stage = 'done'
 }
