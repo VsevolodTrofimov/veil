@@ -25,9 +25,5 @@ const socket = io.connect('wss://vkhack.v-trof.ru:5000/', {
     transports: ['websocket']
 })
 
-socket.on('connect', () => console.log('conn'))
-socket.on('response', data => console.log('d', data))
-
-socket.on('error', console.error)
 
 export default socket

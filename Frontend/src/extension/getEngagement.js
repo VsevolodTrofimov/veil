@@ -33,10 +33,3 @@ let wallSpySet = setInterval(() => {
         }
     }
 }, 100)
-
-const handleEngage = postId => {
-    console.log('engaged')
-    comments.watchPost(postId, console.warn)
-}
-
-add(handleEngage)
