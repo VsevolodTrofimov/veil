@@ -77,8 +77,8 @@ def disconnect(sid):
 @sio.on('connected')
 def get_userid_and_send_all_veils(sid, data):
     print("HUY")
-    print(data)
-    userId = data['userId']
+    data = json.loads(data)
+    userId = data['userId'][1:]
     response_raw = urllib.request.urlopen(
         "https://api.vk.com/method/utils.resolveScreenName?screen_name=" + userId).read().decode("utf-8")
     response = json.loads(response_raw)
