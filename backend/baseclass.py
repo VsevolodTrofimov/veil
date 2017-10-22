@@ -2,7 +2,7 @@ def bfs(ments, diction, root):
     flag = False
     print('MENTS ', ments)
     print(type(ments))
-    for i in ments:
+    for i in list(ments):
         if i==root:
             return True
         elif i != "-1":
