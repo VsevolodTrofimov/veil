@@ -133,7 +133,7 @@ def send_veils(userId):
 @app.route('/data/getDiscussions')
 def send_discussions():
     result = []
-    disc = Discussion.query.filter(Discussion.rated == False).limit(1).all()
+    disc = Discussion.query.filter(Discussion.rated == False).limit(2).all()
     for d in disc:
         dic = {}
         dic['postId'] = d.postId
