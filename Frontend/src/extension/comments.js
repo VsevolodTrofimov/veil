@@ -31,8 +31,9 @@ export const parseComment = ($comment, postId = -1) => {
     const commentId = $comment.getAttribute('data-post-id')
     const authorId = $comment.querySelector('a.author').getAttribute('data-from-id')
    
-    const replyLinks = Array.from($comment.querySelectorAll('a.reply_to')) 
-    const mentions = replyLinks.map($replyLink => parseReplyLink($replyLink).commentId)
+    const $replyLink = $comment.querySelector('a.reply_to') 
+    console.log($replyLink)
+    const mentions = $replyLink ? parseReplyLink($replyLink).commentId : '-1'
 
     const text = htmlToText($comment.querySelector('.wall_reply_text')
                          .innerHTML)
