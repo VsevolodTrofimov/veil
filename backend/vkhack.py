@@ -82,7 +82,7 @@ def send_veil(sid):
 
 @sio.on('comment')
 def receive_comment(sid, data):
-    print(data)
+    print('RECEIVE COMMENT', data)
     our_guy = clients[str(sid)]
     data = json.loads(data)
 
