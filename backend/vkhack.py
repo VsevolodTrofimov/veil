@@ -81,6 +81,7 @@ def send_veil():
         sio.emit('veil_send', data)
 
 
+@app.route('/receive_comment')
 @sio.on('comment')
 def receive_comment(sid, data):
     our_guy = clients[str(sid)]
