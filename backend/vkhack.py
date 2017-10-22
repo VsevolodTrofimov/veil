@@ -26,13 +26,12 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://test_user:123456@localhost/veil'
 
-sio = socketio.Server()
-app = socketio.Middleware(sio, app)
-
 db.init_app(app)
 with app.app_context():
     db.create_all()
     db.session.commit()
+
+sio = socketio.Server()
 
 clients = {}
 
@@ -70,6 +69,8 @@ def get_userid_and_send_all_veils(sid, data):
     with app.app_context():
         send_veil()
 
+
+@app.route('/send_veil')
 def send_veil():
     for d in Discussion.query.filter(Discussion.veiled == False).all():
         data = {}
@@ -193,6 +194,7 @@ def read_res_and_write_to_db():
 if __name__ == '__main__':
     # socket.run(app, port=5000, keyfile='key.pem', certfile='cert.pem')
     #   app.run(app, port=5000)
+    app = socketio.Middleware(sio, app)
 
     eventlet.wsgi.server(eventlet.wrap_ssl(eventlet.listen(('194.67.208.71', 5000)),
                                            certfile='/etc/letsencrypt/live/vkhack.v-trof.ru/cert.pem',
