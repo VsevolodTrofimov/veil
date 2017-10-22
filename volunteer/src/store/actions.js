@@ -19,9 +19,13 @@ export const verdictDiscussion = ({state, getters, commit}, verdict) => {
 
 const parseComment = comment => {
     console.log(comment)
+
+    let text = decodeURIComponent(JSON.parse('"' + comment[1] + '"'))
+    if(text.startsWith("b'")) text = text.substring(2, text.length - 1)
+
     return {
         //escaping utf8
-        text: decodeURIComponent(JSON.parse('"' + comment[1] + '"')),
+        text: text,
         authorId: comment[2]
     }
 }
