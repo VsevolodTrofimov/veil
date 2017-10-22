@@ -51,7 +51,43 @@ export const getDiscussions = ({commit}) => {
         .then(res => res.text())
         .then(data => {
             console.log(data)
-            commit('init', parseServerData(data))
+            data = [{
+                comments: [{
+                    authorId: 'https://vk.com/fidelpinochetov',
+                    text: 'То, что младший комсостав их на месте применил не так, как надо - проблема не танков.'
+                },
+                           {
+                    authorId: 'https://vk.com/alxfu3uk',
+                    text: 'Согласен, человеческий фактор решает, ничего удивительного'
+                },
+                           {
+                    authorId: 'https://vk.com/id311219213',
+                    text: 'Илья, да что ты такое несешь!! ТЫ поехавший?!! При чем тут коммунисты, скажи пожалуйста?! ОНи в операции даже не участвовали!!!'
+                },
+                           {
+                    authorId: 'https://vk.com/fidelpinochetov',
+                    text: 'Андрей, они прямое отношение имеют. Советую почитать статью хотя бы в вики, прежде чем писать сюда.'
+                },
+                           {
+                    authorId: 'https://vk.com/id311219213',
+                    text: 'Илья, сорян, загуглил, нашел документы. Не знал, спасибо. Мнн стоит все же подучить историю))'
+                }],
+            }, {
+                comments: [{
+                    authorId: 'https://vk.com/id_fag',
+                    text: 'Хорош, хохлы! Прочь отсюда нафиг!!'
+                },
+                           {
+                    authorId: 'https://vk.com/lisunov_am',
+                    text: 'Сам бы шел отсюда, петушок'
+                },
+                           {
+                    authorId: 'https://vk.com/victor_sakhnov',
+                    text: 'Вообще все отсюда пошли! Мой паблос, моя страна! ИЛИ УСПОКОИЛИСЬ БЫСТРО!'
+                }]
+            }]
+            commit('init', data)
+            // commit('init', parseServerData(data))
         })
         .catch(console.error)
     

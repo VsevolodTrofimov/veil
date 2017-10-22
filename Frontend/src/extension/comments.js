@@ -38,6 +38,7 @@ export const parseComment = ($comment, postId = -1) => {
     const text = htmlToText($comment.querySelector('.wall_reply_text')
                          .innerHTML)
 
+    console.log('parsed')
     return {commentId, authorId, postId, text, mentions}
 }
 
