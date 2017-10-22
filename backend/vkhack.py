@@ -70,7 +70,7 @@ def get_userid_and_send_all_veils(sid, data):
 
 def send_veil(sid):
     with app.app_context():
-        for d in Discussion.query.filter(Discussion.veiled == False).all():
+        for d in Discussion.query.filter(Discussion.veiled == True).all():
             data = {}
             data['data'] = {}
             data['data']['post_id'] = d.postId
