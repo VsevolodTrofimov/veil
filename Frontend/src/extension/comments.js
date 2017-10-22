@@ -56,7 +56,7 @@ export const watchPost = (postId, cb) => {
         watcherId: nextWatcherId++
     }
 
-    if(watchedPosts.indexOf(postId) === -1) {
+    if(watchedPosts.map(w => w.postId).indexOf(postId) === -1) {
         watchedPosts.push(newWatcher)
         return newWatcher
     }
