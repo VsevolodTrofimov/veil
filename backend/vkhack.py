@@ -200,8 +200,7 @@ if __name__ == '__main__':
     eventlet.wsgi.server(eventlet.wrap_ssl(eventlet.listen(('194.67.208.71', 5000)),
                                            certfile='/etc/letsencrypt/live/vkhack.v-trof.ru/cert.pem',
                                            keyfile='/etc/letsencrypt/live/vkhack.v-trof.ru/privkey.pem',
-                                           server_side=True,
-                                           ssl_version=ssl.PROTOCOL_SSLv23),
+                                           server_side=True),
                          mid)
 
 
