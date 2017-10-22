@@ -53,7 +53,6 @@ def disconnect(sid):
 
 @sio.on('connected')
 def get_userid_and_send_all_veils(sid, data):
-    print("HUY")
     data = json.loads(data)
     userId = data['userId'][1:]
     response_raw = urllib.request.urlopen(
@@ -62,8 +61,6 @@ def get_userid_and_send_all_veils(sid, data):
     userScreenName = str(response['response']['object_id'])
 
     clients[str(sid)] = userScreenName
-    print(clients)
-
     print("%s connected" % userScreenName)
 
     with app.app_context():
@@ -77,6 +74,7 @@ def send_veil(sid):
         data['data'] = {}
         data['data']['post_id'] = d.postId
         data['data']['user_ids'] = [u for u in d.users if u != clients[sid]]
+        print('VEIL', data)
 
         sio.emit('veil_send', data)
 
