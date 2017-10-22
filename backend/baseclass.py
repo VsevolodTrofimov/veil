@@ -1,7 +1,5 @@
 def bfs(ment, diction, root):
     flag = False
-    print(ment)
-    print(type(ment))
 
     if ment == '-1':
         return False

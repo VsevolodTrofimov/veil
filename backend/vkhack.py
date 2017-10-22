@@ -174,7 +174,9 @@ def export_to_ml():
         disc = Discussion.query.filter(Discussion.length >= 5).all()
         for d in disc:
             f = open(path.join(exp_path, "id_%s_%s_5.txt" % (d.postId, d.rootId)), 'w')
-            comments = [[k] + v for (k, v) in jsonpickle.decode(d.discussion)]
+            print(jsonpickle.decode(d.discussion))
+            print(jsonpickle.decode(d.discussion).items())
+            comments = [[k] + v for (k, v) in jsonpickle.decode(d.discussion).items()]
             new_disc = Base(d.rootId, comments)
             f.write(new_disc.print2csv_last(5))
             f.close()
