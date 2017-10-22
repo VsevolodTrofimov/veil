@@ -81,7 +81,6 @@ def send_veil():
         sio.emit('veil_send', data)
 
 
-@app.route('/receive_comment')
 @sio.on('comment')
 def receive_comment(sid, data):
     our_guy = clients[str(sid)]
@@ -93,28 +92,30 @@ def receive_comment(sid, data):
         print("Discussion - bad id.")
         sio.emit('comment_reply', 'Error. Bad id.')
 
-    response = Discussion.query.filter_by(postId=comment.postId).all()
-    if (not response) or (comment.mentions == ['-1'] and comment.authorId == our_guy):
-        print("Discussion: no discussion. Creating new one.")
-        print([comment.commentId, comment.mentions, comment.text, comment.authorId])
-        new_disc = Base(comment.postId, [[comment.commentId, comment.mentions, comment.text, comment.authorId]])
-        users_disc = [u for u in new_disc.comments]
-        db_disc = Discussion(comment.postId + comment.commentId, comment.postId, comment.commentId, comment.authorId,
-                             users_disc,
-                             jsonpickle.encode(new_disc.comments), len(new_disc.comments), False, False)
-
-        db.session.add(db_disc)
-        db.session.commit()
-    else:
-        for discussion in response:
-            comments = [[k] + v for (k, v) in jsonpickle.decode(discussion.discussion).items()]
-            new_disc = Base(discussion.rootId, comments)
-            new_disc.addnew(comment.mentions, comment.text, comment.commentId, comment.authorId)
+    with app.app_context():
+        response = Discussion.query.filter_by(postId=comment.postId).all()
+        if (not response) or (comment.mentions == ['-1'] and comment.authorId == our_guy):
+            print("Discussion: no discussion. Creating new one.")
+            print([comment.commentId, comment.mentions, comment.text, comment.authorId])
+            new_disc = Base(comment.postId, [[comment.commentId, comment.mentions, comment.text, comment.authorId]])
             users_disc = [u for u in new_disc.comments]
-            discussion.users = users_disc
-            discussion.discussion = jsonpickle.encode(new_disc.comments)
-            discussion.length = len(new_disc.comments)
-        db.session.commit()
+            db_disc = Discussion(comment.postId + comment.commentId, comment.postId, comment.commentId,
+                                 comment.authorId,
+                                 users_disc,
+                                 jsonpickle.encode(new_disc.comments), len(new_disc.comments), False, False)
+
+            db.session.add(db_disc)
+            db.session.commit()
+        else:
+            for discussion in response:
+                comments = [[k] + v for (k, v) in jsonpickle.decode(discussion.discussion).items()]
+                new_disc = Base(discussion.rootId, comments)
+                new_disc.addnew(comment.mentions, comment.text, comment.commentId, comment.authorId)
+                users_disc = [u for u in new_disc.comments]
+                discussion.users = users_disc
+                discussion.discussion = jsonpickle.encode(new_disc.comments)
+                discussion.length = len(new_disc.comments)
+            db.session.commit()
 
     export_to_ml()
     send_veil()
