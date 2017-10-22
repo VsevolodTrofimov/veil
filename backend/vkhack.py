@@ -105,6 +105,7 @@ def send_veil():
 def receive_comment(sid, data):
     our_guy = clients[str(sid)]
     data = json.loads(data)
+    print(data)
 
     comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'], data['mentions'])
     if comment.postId == "-1":
