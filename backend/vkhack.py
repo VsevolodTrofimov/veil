@@ -30,33 +30,10 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
     db.session.commit()
-    """
-    disc = Base('58833',
-                [['58833', ['-1'], 'редиска и свекла', '5'],
-                 ['58834', ['58833', '-1'], 'хорошо', '3'],
-                 ['58835', ['58834'], 'Ну и дурак', '5'],
-                 ['58836', ['58835', '58834'], 'умный и хороший человек!', '3'],
-                 ['58837', ['-1', '-1', '-1'], 'а я вообще левый', '2'],
-                 ['58838', ['58837', '-1'], 'а я тоже', '1'],
-                 ['58839', ['58835', '58834'], 'умный и хороший человек!', '3'],
-                 ['58840', ['58835', '58834'], 'умный и хороший человек!', '3'],
-                 ['58841', ['58835', '58834'], 'умный и хороший человек!', '3']]
-                )
-
-    users_disc = [u for u in disc.comments]
-    db_disc = Discussion(disc.rootId + users_disc[0][0], disc.rootId, users_disc[0][0], users_disc[0][3],
-                         users_disc,
-                         jsonpickle.encode(disc.comments), len(disc.comments), False, False)
-    print(db_disc)
-    db.session.add(db_disc)
-    db.session.commit()
-    """
-
 
 sio = socketio.Server()
 
 clients = {}
-
 
 @app.route('/')
 def home():
@@ -89,7 +66,8 @@ def get_userid_and_send_all_veils(sid, data):
 
     print("%s connected" % userScreenName)
 
-    send_veil()
+    with app.app_context():
+        send_veil()
 
 def send_veil():
     for d in Discussion.query.filter(Discussion.veiled == False).all():
