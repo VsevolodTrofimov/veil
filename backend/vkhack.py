@@ -118,7 +118,7 @@ def receive_comment(sid, data):
             db.session.commit()
 
     export_to_ml()
-    send_veil()
+    send_veil(sid)
 
 
 @sio.on('getveils')
