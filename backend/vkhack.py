@@ -121,6 +121,7 @@ def receive_comment(sid, data):
             db.session.commit()
 
     export_to_ml()
+    read_res_and_write_to_db()
     send_veil(sid)
 
 
