@@ -88,7 +88,8 @@ def receive_comment(sid, data):
     print('RECEIVE COMMENT', data)
 
     print(type(data['mentions']))
-    comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'], data['mentions'])
+    comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'].decode("utf-8"),
+                      data['mentions'])
     if comment.postId == "-1":
         print("Discussion - bad id.")
 
