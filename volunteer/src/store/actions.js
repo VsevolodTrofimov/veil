@@ -18,9 +18,10 @@ export const verdictDiscussion = ({state, getters, commit}, verdict) => {
 }
 
 const parseComment = comment => {
+    console.log(comment)
     return {
         //escaping utf8
-        text: decodeURIComponent(JSON.parse('"' + comment[1].replace(/\"/g, '\\"') + '"')),
+        text: decodeURIComponent(JSON.parse('"' + comment[1] + '"')),
         authorId: comment[2]
     }
 }
