@@ -41,11 +41,12 @@ const parseServerData = discussions => {
 export const getDiscussions = ({commit}) => {
     //fetch
     fetch('/data/getDiscussions')
-        // .then(res => res.json())
+        .then(res => res.text())
         .then(data => {
             console.log(data)
             commit('init', parseServerData(data))
         })
+        .catch(console.error)
     
     /* setTimeout(() =>
         commit('init', [{comments: [{
