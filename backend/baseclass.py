@@ -3,7 +3,6 @@ def bfs(ments, diction, root):
     print(*ments)
     print(ments)
     print(type(ments))
-    ments = ''.join(ments)
 
     for i in ments:
         if i==root:
