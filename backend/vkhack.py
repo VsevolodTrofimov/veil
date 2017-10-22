@@ -87,7 +87,7 @@ def receive_comment(sid, data):
     data = json.loads(data)
     print('RECEIVE COMMENT', data)
 
-    comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'], data['mentions'].append('-1'))
+    comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'], list(data['mentions']))
     if comment.postId == "-1":
         print("Discussion - bad id.")
 
