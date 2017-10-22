@@ -24,12 +24,34 @@ import jsonpickle
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:3019@localhost/postgres'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://test_user:123456@localhost/veil'
 
 db.init_app(app)
 with app.app_context():
     db.create_all()
     db.session.commit()
+    """
+    disc = Base('58833',
+                [['58833', ['-1'], 'редиска и свекла', '5'],
+                 ['58834', ['58833', '-1'], 'хорошо', '3'],
+                 ['58835', ['58834'], 'Ну и дурак', '5'],
+                 ['58836', ['58835', '58834'], 'умный и хороший человек!', '3'],
+                 ['58837', ['-1', '-1', '-1'], 'а я вообще левый', '2'],
+                 ['58838', ['58837', '-1'], 'а я тоже', '1'],
+                 ['58839', ['58835', '58834'], 'умный и хороший человек!', '3'],
+                 ['58840', ['58835', '58834'], 'умный и хороший человек!', '3'],
+                 ['58841', ['58835', '58834'], 'умный и хороший человек!', '3']]
+                )
+
+    users_disc = [u for u in disc.comments]
+    db_disc = Discussion(disc.rootId + users_disc[0][0], disc.rootId, users_disc[0][0], users_disc[0][3],
+                         users_disc,
+                         jsonpickle.encode(disc.comments), len(disc.comments), False, False)
+    print(db_disc)
+    db.session.add(db_disc)
+    db.session.commit()
+    """
+
 
 sio = socketio.Server()
 
@@ -114,7 +136,11 @@ def receive_comment(sid, data):
     send_veil()
 
 
-@app.route('/data/getDiscussions')
+@sio.on('getveils')
+def send_veils(userId):
+    pass
+
+@app.route('/getDiscussions')
 def send_discussions():
     result = []
     disc = Discussion.query.filter(Discussion.rated == False).limit(5).all()
@@ -127,7 +153,7 @@ def send_discussions():
     return (jsonify(result))
 
 
-@app.route('/data/postDiscussion', methods=['POST'])
+@app.route('/postDiscussion', methods=['POST'])
 def receive_discussions_and_export_to_ml():
     data = request.form['data']
     dat = json.loads(data)
@@ -187,13 +213,12 @@ if __name__ == '__main__':
     #   app.run(app, port=5000)
     app = socketio.Middleware(sio, app)
 
-    """
-    eventlet.wsgi.server(eventlet.wrap_ssl(eventlet.listen(('', 5000)),
+    eventlet.wsgi.server(eventlet.wrap_ssl(eventlet.listen(('194.67.208.71', 5000)),
                                            certfile='cert.pem',
                                            keyfile='key.pem',
                                            server_side=True,
                                            ssl_version=ssl.PROTOCOL_SSLv23),
                          app)
-    """
 
-    eventlet.wsgi.server(eventlet.listen(('', 5000)), app)
+
+# eventlet.wsgi.server(eventlet.listen(('194.67.208.71', 5000)), app)
