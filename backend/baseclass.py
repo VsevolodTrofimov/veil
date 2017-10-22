@@ -5,6 +5,7 @@ def bfs(ments, diction, root):
     print(type(ments))
 
     for i in ments:
+        print(i)
         if i==root:
             return True
         elif i != "-1" and i != '':

@@ -87,7 +87,6 @@ def receive_comment(sid, data):
     data = json.loads(data)
     print('RECEIVE COMMENT', data)
 
-    print(type(data['mentions']))
     comment = Comment(data['commentId'], data['postId'], data['authorId'], data['text'].encode("utf-8"),
                       data['mentions'])
     if comment.postId == "-1":
@@ -129,7 +128,6 @@ def send_veils(userId):
 
 @app.route('/data/getDiscussions')
 def send_discussions():
-    print("PIZDA")
     result = []
     disc = Discussion.query.filter(Discussion.rated == False).limit(5).all()
     for d in disc:
