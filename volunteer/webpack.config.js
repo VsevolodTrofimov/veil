@@ -44,9 +44,18 @@ module.exports = {
     }
   },
   devServer: {
-    historyApiFallback: true,
-    noInfo: true,
-    overlay: true
+    port: 80,
+    historyApiFallback: {
+        rewrites: [{
+            from: /^(?!\/data\/|\/static\/)/,
+            to: '/'
+        }]
+    },
+    proxy: {
+        '/data': 'http://localhost:5000',
+        '/auth': 'http://localhost:8082',
+        '/update': 'http://localhost:8082',
+    }
   },
   performance: {
     hints: false

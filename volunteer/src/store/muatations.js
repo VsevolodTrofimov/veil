@@ -8,8 +8,8 @@ export const init = (state, discussions) =>  {
     state.cursor.discussion = 0
 
     state.commentsDone = false
-    state.allDone = false
-    state.stage = 'comment'
+    if(discussions.length === 0)
+        state.stage = 'done'
 }
 
 export const verdict = function (state, {verdict, comment}) {

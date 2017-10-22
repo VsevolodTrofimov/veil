@@ -25,7 +25,7 @@ const $makeAction = (context, action) => {
     $btn.classList.add('flat_button')
     $btn.style.marginRight = '15px'
     $btn.style.marginBottom = '15px'
-    $btn.textContent = action.text
+    $btn.innerHTML = action.text
 
     $btn.addEventListener('click', () => transition(context, action))
 
