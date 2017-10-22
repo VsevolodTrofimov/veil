@@ -23,6 +23,10 @@ socket.on('error', console.error)
 const handleEngage = postId => {
     console.log('engaged')
     comments.watchPost(postId, comment => {
+        if(comment.commentId.startsWith('0_')) return
+        
+        //FUCK YOU LIZARD MAN
+        if(!comment.mentions.length) comment.mentions = ['-1']
         console.log('emit', comment)
         socket.emit('comment', JSON.stringify(comment))
     })
